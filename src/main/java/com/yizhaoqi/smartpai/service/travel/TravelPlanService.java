@@ -24,9 +24,11 @@ public class TravelPlanService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TravelAgentService travelAgentService;
+
     /**
-     * 创建行程规划任务
-     * 本步骤只创建任务记录，不真正生成行程（占位实现）
+     * 创建行程规划任务并执行生成（第四步 Mock 实现）
      */
     @Transactional
     public PlanItineraryResponse createPlanTask(PlanItineraryRequest request, String userId) {
@@ -38,7 +40,7 @@ public class TravelPlanService {
         // 2. 生成 taskId
         String taskId = "task_" + UUID.randomUUID().toString().substring(0, 8);
 
-        // 3. 创建任务记录
+        // 3. 创建任务记录（初始状态 QUEUED）
         TravelPlanTask task = new TravelPlanTask();
         task.setTaskId(taskId);
         task.setUserId(userId);
@@ -47,7 +49,7 @@ public class TravelPlanService {
         task.setEndDate(LocalDate.parse(request.getEndDate()));
         task.setTravelerCount(request.getTravelerCount() != null ? request.getTravelerCount() : 2);
         task.setBudget(request.getBudget());
-        
+
         // 保存偏好设置为JSON
         try {
             if (request.getPreferences() != null) {
@@ -57,8 +59,8 @@ public class TravelPlanService {
             logger.warn("Failed to serialize preferences", e);
         }
 
-        // 初始状态设为 PROCESSING
-        task.setStatus("PROCESSING");
+        // 初始状态设为 QUEUED
+        task.setStatus("QUEUED");
         task.setProgress(0);
         task.setErrorMessage(null);
         task.setResultJson(null);
@@ -66,14 +68,18 @@ public class TravelPlanService {
         travelPlanTaskRepository.save(task);
         logger.info("Plan task created - taskId: {}", taskId);
 
-        // TODO: 下一步接入 Agent 核心逻辑时，这里触发异步任务
-        // asyncPlanItinerary(taskId, request, userId);
+        // 4. 调用 TravelAgentService 执行同步生成（Mock 版本）
+        // 当前为同步实现，后续可改为异步
+        travelAgentService.executePlan(taskId, request, userId);
 
-        // 4. 返回响应
+        // 5. 返回响应
         PlanItineraryResponse response = new PlanItineraryResponse();
         response.setTaskId(taskId);
-        response.setStatus("PROCESSING");
-        response.setEstimatedTime(15); // 预计15秒（占位值）
+
+        // 重新查询最新状态
+        TravelPlanTask finalTask = travelPlanTaskRepository.findByTaskId(taskId).orElse(task);
+        response.setStatus(finalTask.getStatus());
+        response.setEstimatedTime(5); // Mock 版本预计5秒
 
         return response;
     }
