@@ -1,0 +1,143 @@
+/* pages/index/index.wxss */
+.welcome-section {
+  margin-bottom: 40rpx;
+}
+
+.welcome-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40rpx 30rpx;
+}
+
+.welcome-header {
+  flex: 1;
+}
+
+.welcome-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 10rpx;
+}
+
+.welcome-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #969799;
+}
+
+.welcome-image {
+  width: 180rpx;
+  height: 180rpx;
+}
+
+.quick-actions {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.title-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #323233;
+}
+
+.more-text {
+  font-size: 26rpx;
+  color: #1989fa;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  margin-bottom: 10rpx;
+}
+
+.plan-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.itinerary-icon {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.chat-icon {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.guide-icon {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #323233;
+}
+
+.destinations {
+  margin-bottom: 40rpx;
+}
+
+.destination-list {
+  white-space: nowrap;
+  padding: 0 10rpx;
+}
+
+.destination-item {
+  display: inline-block;
+  width: 280rpx;
+  margin-right: 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.dest-image {
+  width: 100%;
+  height: 280rpx;
+}
+
+.dest-info {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.dest-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 6rpx;
+}
+
+.dest-desc {
+  font-size: 22rpx;
+  color: #969799;
+}

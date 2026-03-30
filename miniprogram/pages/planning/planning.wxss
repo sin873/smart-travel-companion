@@ -1,0 +1,145 @@
+/* pages/planning/planning.wxss */
+.planning-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx;
+  min-height: 100vh;
+}
+
+.status-icon {
+  font-size: 160rpx;
+  margin-bottom: 40rpx;
+}
+
+.status-text {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.status-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 10rpx;
+}
+
+.status-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #969799;
+}
+
+.progress-section {
+  width: 100%;
+  margin-bottom: 60rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background: #f7f8fa;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1989fa 0%, #07c160 100%);
+  border-radius: 6rpx;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  display: block;
+  text-align: center;
+  font-size: 28rpx;
+  color: #1989fa;
+  font-weight: 500;
+}
+
+.steps-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20rpx;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.step-circle {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #969799;
+  margin-bottom: 10rpx;
+  transition: all 0.3s;
+}
+
+.step-item.completed .step-circle {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  color: white;
+}
+
+.step-text {
+  font-size: 22rpx;
+  color: #969799;
+  text-align: center;
+}
+
+.step-item.completed .step-text {
+  color: #323233;
+}
+
+.step-line {
+  width: 40rpx;
+  height: 4rpx;
+  background: #f7f8fa;
+  margin-top: -40rpx;
+  transition: all 0.3s;
+}
+
+.step-line.active {
+  background: linear-gradient(90deg, #1989fa 0%, #07c160 100%);
+}
+
+.completed-section,
+.failed-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.view-btn,
+.retry-btn,
+.back-btn {
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  color: white;
+}
+
+.back-btn {
+  background: #f7f8fa;
+  color: #323233;
+}

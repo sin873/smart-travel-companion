@@ -1,0 +1,59 @@
+<!-- pages/login/login.wxml -->
+<view class="container">
+  <view class="login-content">
+    <!-- Logo区域 -->
+    <view class="logo-section">
+      <view class="logo-icon">
+        <text>🧳</text>
+      </view>
+      <text class="logo-title">智能伴旅</text>
+      <text class="logo-subtitle">AI驱动的个性化行程规划</text>
+    </view>
+
+    <!-- 功能介绍 -->
+    <view class="features-section">
+      <view class="feature-item">
+        <view class="feature-icon">
+          <text>🤖</text>
+        </view>
+        <view class="feature-text">
+          <text class="feature-title">AI智能规划</text>
+          <text class="feature-desc">基于大模型为您定制专属行程</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">
+          <text>🗺️</text>
+        </view>
+        <view class="feature-text">
+          <text class="feature-title">知识库支持</text>
+          <text class="feature-desc">整合海量景点信息和攻略</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">
+          <text>✨</text>
+        </view>
+        <view class="feature-text">
+          <text class="feature-title">个性化推荐</text>
+          <text class="feature-desc">根据您的偏好智能推荐景点</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 登录按钮 -->
+    <view class="login-section">
+      <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
+        <text class="btn-icon">微信</text>
+        <text>一键登录</text>
+      </button>
+      
+      <text class="login-tips">登录即表示同意《用户协议》和《隐私政策》</text>
+    </view>
+
+    <!-- 游客模式 -->
+    <view class="guest-section">
+      <text class="guest-text" bindtap="guestLogin">先体验一下</text>
+    </view>
+  </view>
+</view>

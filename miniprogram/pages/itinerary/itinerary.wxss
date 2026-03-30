@@ -1,0 +1,218 @@
+/* pages/itinerary/itinerary.wxss */
+.itinerary-header {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  padding: 40rpx 30rpx;
+  margin: -20rpx -20rpx 30rpx -20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-info {
+  flex: 1;
+}
+
+.itinerary-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 15rpx;
+}
+
+.itinerary-meta {
+  display: flex;
+  gap: 20rpx;
+}
+
+.meta-item {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header-actions {
+  display: flex;
+  gap: 15rpx;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  border-radius: 30rpx;
+  padding: 15rpx 25rpx;
+  font-size: 24rpx;
+  line-height: 1;
+}
+
+.days-container {
+  margin-bottom: 120rpx;
+}
+
+.day-card {
+  background: white;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.day-header {
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1rpx solid #f7f8fa;
+}
+
+.day-info {
+  flex: 1;
+}
+
+.day-number {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1989fa;
+  margin-bottom: 5rpx;
+}
+
+.day-date {
+  display: block;
+  font-size: 26rpx;
+  color: #969799;
+  margin-bottom: 5rpx;
+}
+
+.day-theme {
+  display: block;
+  font-size: 24rpx;
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.1);
+  padding: 5rpx 15rpx;
+  border-radius: 20rpx;
+  display: inline-block;
+}
+
+.toggle-icon {
+  font-size: 30rpx;
+  color: #969799;
+  transition: transform 0.3s;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.day-content {
+  padding: 30rpx;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 40rpx;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 30rpx;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -55rpx;
+  top: 20rpx;
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  border: 4rpx solid white;
+  box-shadow: 0 0 0 4rpx #f7f8fa;
+}
+
+.timeline-line {
+  position: absolute;
+  left: -47rpx;
+  top: 50rpx;
+  width: 4rpx;
+  height: calc(100% + 10rpx);
+  background: #f7f8fa;
+}
+
+.timeline-content {
+  margin-bottom: 0;
+}
+
+.attr-time {
+  font-size: 24rpx;
+  color: #1989fa;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.attr-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 8rpx;
+}
+
+.attr-duration {
+  font-size: 24rpx;
+  color: #969799;
+  margin-bottom: 8rpx;
+}
+
+.attr-notes {
+  font-size: 24rpx;
+  color: #646566;
+  background: #f7f8fa;
+  padding: 15rpx;
+  border-radius: 10rpx;
+  margin-top: 10rpx;
+}
+
+.day-notes {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background: #fffbe8;
+  border-radius: 12rpx;
+}
+
+.notes-label {
+  display: block;
+  font-size: 24rpx;
+  color: #ff976a;
+  margin-bottom: 8rpx;
+}
+
+.notes-text {
+  font-size: 24rpx;
+  color: #646566;
+}
+
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx 30rpx;
+  display: flex;
+  gap: 20rpx;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.edit-btn,
+.confirm-btn {
+  flex: 1;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 30rpx;
+}
+
+.edit-btn {
+  background: #f7f8fa;
+  color: #323233;
+}

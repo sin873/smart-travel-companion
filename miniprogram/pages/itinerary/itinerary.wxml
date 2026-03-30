@@ -1,0 +1,66 @@
+<!-- pages/itinerary/itinerary.wxml -->
+<view class="container">
+  <view class="itinerary-header">
+    <view class="header-info">
+      <text class="itinerary-title">{{itinerary.title}}</text>
+      <view class="itinerary-meta">
+        <text class="meta-item">🗓️ {{dateRange}}</text>
+        <text class="meta-item">👥 {{itinerary.travelerCount}}人</text>
+      </view>
+    </view>
+    <view class="header-actions">
+      <button class="action-btn" bindtap="saveItinerary" wx:if="{{from === 'planning'}}">
+        <text>💾 保存</text>
+      </button>
+      <button class="action-btn" bindtap="shareItinerary">
+        <text>📤 分享</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 每日行程 -->
+  <view class="days-container">
+    <view class="day-card" wx:for="{{itinerary.days}}" wx:key="dayId" wx:for-item="day">
+      <view class="day-header" bindtap="toggleDay" data-index="{{index}}">
+        <view class="day-info">
+          <text class="day-number">Day {{day.dayNumber}}</text>
+          <text class="day-date">{{formatDate(day.date)}}</text>
+          <text class="day-theme" wx:if="{{day.title}}">{{day.title}}</text>
+        </view>
+        <text class="toggle-icon {{day.expanded ? 'expanded' : ''}}">▼</text>
+      </view>
+      
+      <view class="day-content" wx:if="{{day.expanded}}">
+        <view class="timeline">
+          <view class="timeline-item" wx:for="{{day.attractions}}" wx:key="itemId" wx:for-item="attr">
+            <view class="timeline-dot"></view>
+            <view class="timeline-line" wx:if="{{index < day.attractions.length - 1}}"></view>
+            <view class="timeline-content card">
+              <view class="attr-time">
+                <text>{{formatTime(attr.startTime)}} - {{formatTime(attr.endTime)}}</text>
+              </view>
+              <view class="attr-name">{{attr.attractionName}}</view>
+              <view class="attr-duration">
+                <text>⏱️ {{attr.durationMinutes}}分钟</text>
+              </view>
+              <view class="attr-notes" wx:if="{{attr.notes}}">
+                <text>{{attr.notes}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        
+        <view class="day-notes" wx:if="{{day.notes}}">
+          <text class="notes-label">📝 当日备注:</text>
+          <text class="notes-text">{{day.notes}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button class="edit-btn">✏️ 调整行程</button>
+    <button class="confirm-btn btn-primary" bindtap="confirmItinerary">✅ 确认行程</button>
+  </view>
+</view>

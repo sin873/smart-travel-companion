@@ -1,0 +1,186 @@
+/* pages/my-itineraries/my-itineraries.wxss */
+.header {
+  padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  margin-right: 25rpx;
+}
+
+.avatar.placeholder {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.user-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 8rpx;
+}
+
+.user-desc {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+.stats-section {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  margin: 0 20rpx 30rpx 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1989fa;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+.list-section {
+  padding: 0 20rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #323233;
+}
+
+.section-action {
+  font-size: 26rpx;
+  color: #1989fa;
+}
+
+.itinerary-list {
+  margin-bottom: 40rpx;
+}
+
+.itinerary-item {
+  margin-bottom: 20rpx;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.item-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #323233;
+}
+
+.item-status {
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+.item-status.DRAFT {
+  background: #fff7e6;
+  color: #ff976a;
+}
+
+.item-status.PLANNED {
+  background: #e8f7ff;
+  color: #1989fa;
+}
+
+.item-status.COMPLETED {
+  background: #f0fff4;
+  color: #07c160;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.info-item {
+  font-size: 24rpx;
+  color: #646566;
+}
+
+.empty-state,
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon,
+.prompt-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text,
+.prompt-text {
+  font-size: 30rpx;
+  color: #323233;
+  margin-bottom: 10rpx;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: #969799;
+  margin-bottom: 40rpx;
+}
+
+.empty-btn,
+.prompt-btn {
+  width: 300rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 30rpx;
+}

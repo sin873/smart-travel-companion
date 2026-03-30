@@ -1,0 +1,70 @@
+<!-- pages/planning/planning.wxml -->
+<view class="container">
+  <view class="planning-content">
+    <!-- 状态图标 -->
+    <view class="status-icon">
+      <text wx:if="{{status === 'QUEUED' || status === 'PROCESSING'}}">🤖</text>
+      <text wx:elif="{{status === 'COMPLETED'}}">🎉</text>
+      <text wx:elif="{{status === 'FAILED'}}">😢</text>
+    </view>
+
+    <!-- 状态文本 -->
+    <view class="status-text">
+      <text class="status-title">{{statusTitle}}</text>
+      <text class="status-desc">{{message}}</text>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-section" wx:if="{{status === 'QUEUED' || status === 'PROCESSING'}}">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{progress}}%"></view>
+      </view>
+      <text class="progress-text">{{progress}}%</text>
+    </view>
+
+    <!-- 步骤指示器 -->
+    <view class="steps-section" wx:if="{{status === 'QUEUED' || status === 'PROCESSING'}}">
+      <view class="step-item {{currentStep >= 1 ? 'completed' : ''}}">
+        <view class="step-circle">
+          <text wx:if="{{currentStep > 1}}">✓</text>
+          <text wx:else>1</text>
+        </view>
+        <text class="step-text">分析需求</text>
+      </view>
+      <view class="step-line {{currentStep >= 2 ? 'active' : ''}}"></view>
+      <view class="step-item {{currentStep >= 2 ? 'completed' : ''}}">
+        <view class="step-circle">
+          <text wx:if="{{currentStep > 2}}">✓</text>
+          <text wx:else>2</text>
+        </view>
+        <text class="step-text">检索景点</text>
+      </view>
+      <view class="step-line {{currentStep >= 3 ? 'active' : ''}}"></view>
+      <view class="step-item {{currentStep >= 3 ? 'completed' : ''}}">
+        <view class="step-circle">
+          <text wx:if="{{currentStep > 3}}">✓</text>
+          <text wx:else>3</text>
+        </view>
+        <text class="step-text">规划路线</text>
+      </view>
+      <view class="step-line {{currentStep >= 4 ? 'active' : ''}}"></view>
+      <view class="step-item {{currentStep >= 4 ? 'completed' : ''}}">
+        <view class="step-circle">
+          <text>4</text>
+        </view>
+        <text class="step-text">生成行程</text>
+      </view>
+    </view>
+
+    <!-- 完成状态 -->
+    <view class="completed-section" wx:if="{{status === 'COMPLETED'}}">
+      <button class="view-btn btn-primary" bindtap="viewItinerary">查看行程</button>
+    </view>
+
+    <!-- 失败状态 -->
+    <view class="failed-section" wx:if="{{status === 'FAILED'}}">
+      <button class="retry-btn" bindtap="retryPlan">重新规划</button>
+      <button class="back-btn" bindtap="goBack">返回修改</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,132 @@
+/* pages/login/login.wxss */
+.login-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 80rpx 60rpx;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 80rpx;
+  margin-top: 60rpx;
+}
+
+.logo-icon {
+  width: 160rpx;
+  height: 160rpx;
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+  margin: 0 auto 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(25, 137, 250, 0.3);
+}
+
+.logo-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 15rpx;
+}
+
+.logo-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #969799;
+}
+
+.features-section {
+  margin-bottom: 80rpx;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #f7f8fa 0%, #e8f7ff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-right: 25rpx;
+}
+
+.feature-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #323233;
+  margin-bottom: 6rpx;
+}
+
+.feature-desc {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+.login-section {
+  margin-top: auto;
+  margin-bottom: 40rpx;
+}
+
+.login-btn {
+  width: 100%;
+  height: 100rpx;
+  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
+  color: white;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+}
+
+.btn-icon {
+  font-size: 28rpx;
+  background: white;
+  color: #07c160;
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+  font-weight: bold;
+}
+
+.login-tips {
+  display: block;
+  text-align: center;
+  font-size: 22rpx;
+  color: #c8c9cc;
+  margin-top: 25rpx;
+}
+
+.guest-section {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.guest-text {
+  font-size: 26rpx;
+  color: #1989fa;
+}
