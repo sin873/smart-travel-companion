@@ -93,4 +93,5 @@ CREATE TABLE IF NOT EXISTS travel_itinerary_item (
 -- ========================================
 -- 初始化完成
 -- ========================================
-SELECT '旅游规划模块数据库初始化完成！' AS message;
+
+
