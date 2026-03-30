@@ -12,8 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * 配置Spring Security的类
- * 该类定义了应用的安全配置，包括请求的授权规则、CSRF保护的配置以及会话管理策略
+ * 配置 Spring Security 的类
+ * 该类定义了应用的安全配置，包括请求的授权规则、CSRF 保护的配置以及会话管理策略
  */
 @Configuration
 @EnableWebSecurity
@@ -29,17 +29,17 @@ public class SecurityConfig {
     private OrgTagAuthorizationFilter orgTagAuthorizationFilter;
 
     /**
-     * 配置SecurityFilterChain bean的方法
-     * 该方法主要用于配置应用的安全规则，包括哪些请求需要授权、CSRF保护的启用或禁用、会话管理策略等
+     * 配置 SecurityFilterChain bean 的方法
+     * 该方法主要用于配置应用的安全规则，包括哪些请求需要授权、CSRF 保护的启用或禁用、会话管理策略等
      *
-     * @param http HttpSecurity对象，用于配置应用的安全规则
-     * @return SecurityFilterChain对象，代表配置好的安全过滤链
+     * @param http HttpSecurity 对象，用于配置应用的安全规则
+     * @return SecurityFilterChain 对象，代表配置好的安全过滤链
      * @throws Exception 如果配置过程中发生错误，会抛出异常
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         try {
-            // 禁用CSRF保护
+            // 禁用 CSRF 保护
             http.csrf(csrf -> csrf.disable())
                     // 配置请求的授权规则
                     .authorizeHttpRequests(authorize -> authorize
@@ -51,13 +51,15 @@ public class SecurityConfig {
                             .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
                             // 允许测试接口
                             .requestMatchers("/api/v1/test/**").permitAll()
+                            // 旅行规划接口 - 临时放行用于测试（第三步）
+                            .requestMatchers("/api/v1/travel/**").permitAll()
                             // 文件上传和下载相关接口 - 普通用户和管理员都可访问
                             .requestMatchers("/api/v1/upload/**", "/api/v1/parse", "/api/v1/documents/download", "/api/v1/documents/preview").hasAnyRole("USER", "ADMIN")
                             // 对话历史相关接口 - 用户只能查看自己的历史，管理员可以查看所有
                             .requestMatchers("/api/v1/users/conversation/**").hasAnyRole("USER", "ADMIN")
                             // 搜索接口 - 普通用户和管理员都可访问
                             .requestMatchers("/api/search/**").hasAnyRole("USER", "ADMIN")
-                            // 聊天相关接口 - WebSocket停止Token获取 (允许匿名访问)
+                            // 聊天相关接口 - WebSocket 停止 Token 获取 (允许匿名访问)
                             .requestMatchers("/api/chat/websocket-token").permitAll()
                             // 管理员专属接口 - 知识库管理、系统状态、用户活动监控
                             .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
@@ -66,10 +68,10 @@ public class SecurityConfig {
                             // 其他请求需要认证
                             .anyRequest().authenticated())
                     // 配置会话管理策略
-                    // 设置会话创建策略为STATELESS，表示不会创建会话，通常用于无状态的API应用
+                    // 设置会话创建策略为 STATELESS，表示不会创建会话，通常用于无状态的 API 应用
                     .sessionManagement(session -> session
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    // 添加JWT认证过滤器
+                    // 添加 JWT 认证过滤器
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                     // 添加组织标签授权过滤器
                     .addFilterAfter(orgTagAuthorizationFilter, JwtAuthenticationFilter.class);
@@ -86,4 +88,3 @@ public class SecurityConfig {
         }
     }
 }
-
