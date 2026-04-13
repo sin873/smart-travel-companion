@@ -5,7 +5,10 @@ Page({
   data: {
     itinerary: null,
     from: '',
-    dateRange: ''
+    dateRange: '',
+    markers: [],
+    centerLatitude: 0,
+    centerLongitude: 0
   },
 
   onLoad(options) {
@@ -34,6 +37,60 @@ Page({
     }
     
     this.setData({ itinerary })
+
+    this.generateMapMarkers(itinerary)
+  },
+
+  generateMapMarkers: function(itinerary) {
+    var markers = []
+    var markerIndex = 0
+
+    if (itinerary.days && itinerary.days.length > 0) {
+      for (var i = 0; i < itinerary.days.length; i++) {
+        var day = itinerary.days[i]
+        var items = day.items || day.attractions || []
+        if (items.length > 0) {
+          for (var j = 0; j < items.length; j++) {
+            var item = items[j]
+            if (item.latitude && item.longitude) {
+              var lat = item.latitude
+              var lng = item.longitude
+
+              if (typeof lat === 'string') {
+                lat = parseFloat(lat)
+              }
+              if (typeof lng === 'string') {
+                lng = parseFloat(lng)
+              }
+
+              if (!isNaN(lat) && !isNaN(lng)) {
+                markers.push({
+                  id: markerIndex++,
+                  latitude: lat,
+                  longitude: lng,
+                  title: item.attractionName || item.name || '景点',
+                  width: 30,
+                  height: 30
+                })
+              }
+            }
+          }
+        }
+      }
+    }
+
+    var centerLat = 0
+    var centerLng = 0
+    if (markers.length > 0) {
+      centerLat = markers[0].latitude
+      centerLng = markers[0].longitude
+    }
+
+    this.setData({
+      markers: markers,
+      centerLatitude: centerLat,
+      centerLongitude: centerLng
+    })
   },
 
   async loadItinerary(itineraryId) {

@@ -32,7 +32,13 @@ public class TravelPlanService {
      */
     @Transactional
     public PlanItineraryResponse createPlanTask(PlanItineraryRequest request, String userId) {
-        logger.info("Creating plan task - userId: {}, destination: {}", userId, request.getDestination());
+        logger.info("Creating plan task - userId: '{}', destination: {}", userId, request.getDestination());
+        
+        // 检查 userId 是否为 null
+        if (userId == null || userId.isBlank()) {
+            logger.error("userId is null or blank! This should not happen.");
+            throw new IllegalArgumentException("用户 ID 不能为空");
+        }
 
         // 1. 校验必要字段
         validatePlanRequest(request);

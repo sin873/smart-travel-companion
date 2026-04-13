@@ -54,9 +54,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
-  # Kafka配置 - Windows本地 (暂时禁用)
+  # Kafka配置 - Windows本地
   kafka:
-    enabled: false
+    enabled: true
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

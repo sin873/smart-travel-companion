@@ -149,6 +149,49 @@
   color: #646566;
 }
 
+.item-content {
+  padding: 30rpx;
+}
+
+.item-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  background: #fff9e6; /* 黄色背景，容易看到 */
+}
+
+.delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 32rpx;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+  color: white;
+  font-size: 26rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(238, 90, 90, 0.3);
+  transition: all 0.3s;
+}
+
+.delete-btn:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.delete-btn.deleting {
+  opacity: 0.6;
+  background: #ccc;
+  box-shadow: none;
+}
+
+.card {
+  background: white;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
 .empty-state,
 .login-prompt {
   display: flex;

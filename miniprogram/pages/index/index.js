@@ -45,20 +45,20 @@ Page({
   },
 
   goToPlan() {
-    wx.switchTab({
+    wx.navigateTo({
       url: '/pages/plan/plan'
     })
   },
 
   goToMyItineraries() {
-    wx.switchTab({
+    wx.navigateTo({
       url: '/pages/my-itineraries/my-itineraries'
     })
   },
 
   selectDestination(e) {
     const dest = e.currentTarget.dataset.dest
-    wx.switchTab({
+    wx.navigateTo({
       url: '/pages/plan/plan',
       success: () => {
         const pages = getCurrentPages()

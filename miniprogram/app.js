@@ -13,7 +13,7 @@ App({
   globalData: {
     userInfo: null,
     token: null,
-    baseUrl: 'http://localhost:8080/api/v1/miniprogram'
+    baseUrl: 'http://localhost:8081/api/v1/travel'
   },
 
   checkLoginStatus() {

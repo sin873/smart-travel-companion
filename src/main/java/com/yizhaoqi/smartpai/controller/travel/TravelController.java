@@ -41,7 +41,11 @@ public class TravelController {
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
         try {
             String userId = extractUserId(authHeader);
-            logger.info("Plan itinerary request - userId: {}, destination: {}", userId, request.getDestination());
+            logger.info("Plan itinerary request - userId: '{}', destination: {}", userId, request.getDestination());
+            
+            // 打印请求参数
+            logger.info("Request params: startDate={}, endDate={}, travelerCount={}, budget={}", 
+                request.getStartDate(), request.getEndDate(), request.getTravelerCount(), request.getBudget());
             
             PlanItineraryResponse response = travelPlanService.createPlanTask(request, userId);
 
@@ -53,7 +57,8 @@ public class TravelController {
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            logger.error("Plan itinerary failed", e);
+            logger.error("Plan itinerary failed - destination: {}, error: {}", 
+                request != null ? request.getDestination() : "unknown", e.getMessage(), e);
 
             Map<String, Object> error = new HashMap<>();
             error.put("code", 500);
@@ -109,8 +114,10 @@ public class TravelController {
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
         try {
             String userId = extractUserId(authHeader);
-            logger.info("Save itinerary request - userId: {}, title: {}", userId, itinerary.getTitle());
-            
+            logger.info("========== 【DEBUG Controller】收到保存行程请求 ==========");
+            logger.info("【DEBUG Controller】userId: {}", userId);
+            logger.info("【DEBUG Controller】接收到的完整 itinerary: {}", itinerary);
+
             String itineraryId = itineraryService.saveItinerary(itinerary, userId);
 
             Map<String, Object> result = new HashMap<>();
@@ -119,9 +126,10 @@ public class TravelController {
             result.put("data", Map.of("itineraryId", itineraryId));
             result.put("timestamp", System.currentTimeMillis());
 
+            logger.info("【DEBUG Controller】保存成功，返回 itineraryId: {}", itineraryId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            logger.error("Save itinerary failed", e);
+            logger.error("【DEBUG Controller】保存失败", e);
 
             Map<String, Object> error = new HashMap<>();
             error.put("code", 500);
@@ -236,19 +244,29 @@ public class TravelController {
     // ==================== 私有方法 ====================
 
     /**
-     * 从Authorization header中提取userId
-     * 如果没有token，返回演示用户 demo_user_001
+     * 从 Authorization header 中提取 userId
+     * 如果没有 token 或解析失败，返回演示用户 demo_user_001
      */
     private String extractUserId(String authHeader) {
+        logger.debug("Extracting userId from authHeader: {}", authHeader != null ? "present" : "null");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
                 String token = authHeader.substring(7);
-                return jwtUtils.extractUserIdFromToken(token);
+                logger.debug("Token extracted, length: {}", token.length());
+                String userId = jwtUtils.extractUserIdFromToken(token);
+                // 如果从 token 中提取 userId 失败，返回演示用户
+                if (userId == null || userId.isBlank()) {
+                    logger.warn("Failed to extract userId from token (userId={}), using demo user", userId);
+                    return "demo_user_001";
+                }
+                logger.info("Successfully extracted userId from token: {}", userId);
+                return userId;
             } catch (Exception e) {
                 logger.warn("Failed to extract userId from token, using demo user", e);
             }
         }
-        // 临时方案：使用演示用户
+        logger.info("No valid auth header, using demo user: demo_user_001");
+        // 没有 token 时，使用演示用户
         return "demo_user_001";
     }
 }

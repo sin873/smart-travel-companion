@@ -85,16 +85,21 @@ public class LoggingInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 从请求中提取用户ID
+     * 从请求中提取用户 ID
      */
     private String extractUserId(HttpServletRequest request) {
         try {
             String token = extractToken(request);
             if (token != null) {
-                return jwtUtils.extractUserIdFromToken(token);
+                String userId = jwtUtils.extractUserIdFromToken(token);
+                // 如果从 token 中提取失败，返回 anonymous
+                if (userId == null || userId.isBlank()) {
+                    return "anonymous";
+                }
+                return userId;
             }
         } catch (Exception e) {
-            // 忽略token解析异常
+            // 忽略 token 解析异常
         }
         return "anonymous";
     }

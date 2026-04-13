@@ -54,5 +54,15 @@ function request(url, method = 'GET', data = {}) {
 
 module.exports = {
   get: (url, data) => request(url, 'GET', data),
-  post: (url, data) => request(url, 'POST', data)
+  post: (url, data) => request(url, 'POST', data),
+  
+  // 旅游规划相关API
+  createPlan: (data) => request('/plan', 'POST', data),
+  getPlanStatus: (taskId) => request(`/plan/${taskId}`, 'GET'),
+  
+  // 行程相关API
+  saveItinerary: (data) => request('/itineraries', 'POST', data),
+  getItineraryList: () => request('/itineraries', 'GET'),
+  getItineraryDetail: (itineraryId) => request(`/itineraries/${itineraryId}`, 'GET'),
+  deleteItinerary: (itineraryId) => request(`/itineraries/${itineraryId}`, 'DELETE')
 }

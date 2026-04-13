@@ -129,6 +129,10 @@ public class MockAttractionDataProvider {
         private int durationMinutes;
         private List<String> categories;
 
+        // 无参构造函数
+        public MockAttraction() {
+        }
+
         public MockAttraction(String attractionId, String attractionName, String address,
                                double latitude, double longitude, int durationMinutes,
                                List<String> categories) {
@@ -141,6 +145,7 @@ public class MockAttractionDataProvider {
             this.categories = categories;
         }
 
+        // Getter 方法
         public String getAttractionId() { return attractionId; }
         public String getAttractionName() { return attractionName; }
         public String getAddress() { return address; }
@@ -148,6 +153,15 @@ public class MockAttractionDataProvider {
         public double getLongitude() { return longitude; }
         public int getDurationMinutes() { return durationMinutes; }
         public List<String> getCategories() { return categories; }
+
+        // Setter 方法
+        public void setAttractionId(String attractionId) { this.attractionId = attractionId; }
+        public void setAttractionName(String attractionName) { this.attractionName = attractionName; }
+        public void setAddress(String address) { this.address = address; }
+        public void setLatitude(double latitude) { this.latitude = latitude; }
+        public void setLongitude(double longitude) { this.longitude = longitude; }
+        public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
+        public void setCategories(List<String> categories) { this.categories = categories; }
 
         public boolean hasCategory(String category) {
             return categories.contains(category);

@@ -40,16 +40,30 @@ public class ItineraryService {
      */
     @Transactional
     public String saveItinerary(ItineraryDTO itineraryDTO, String userId) {
-        logger.info("Saving itinerary - userId: {}, title: {}", userId, itineraryDTO.getTitle());
+        logger.info("========== 【DEBUG】开始保存行程 ==========");
+        logger.info("【DEBUG】userId: {}", userId);
+        logger.info("【DEBUG】接收到的 itineraryDTO: {}", itineraryDTO);
+        logger.info("【DEBUG】itineraryDTO.title: {}", itineraryDTO.getTitle());
+        logger.info("【DEBUG】itineraryDTO.destination: {}", itineraryDTO.getDestination());
+        logger.info("【DEBUG】itineraryDTO.startDate: {}", itineraryDTO.getStartDate());
+        logger.info("【DEBUG】itineraryDTO.endDate: {}", itineraryDTO.getEndDate());
+        logger.info("【DEBUG】itineraryDTO.days 是否存在: {}", (itineraryDTO.getDays() != null));
+        if (itineraryDTO.getDays() != null) {
+            logger.info("【DEBUG】itineraryDTO.days 数量: {}", itineraryDTO.getDays().size());
+            for (int i = 0; i < itineraryDTO.getDays().size(); i++) {
+                logger.info("【DEBUG】  day[{}]: {}", i, itineraryDTO.getDays().get(i));
+            }
+        }
 
         // 1. 生成 itineraryId
         String itineraryId = "itinerary_" + UUID.randomUUID().toString().substring(0, 8);
+        logger.info("【DEBUG】生成 itineraryId: {}", itineraryId);
 
         // 2. 保存行程主表
         TravelItinerary itinerary = new TravelItinerary();
         itinerary.setItineraryId(itineraryId);
         itinerary.setUserId(userId);
-        itinerary.setTitle(itineraryDTO.getTitle() != null ? itineraryDTO.getTitle() : 
+        itinerary.setTitle(itineraryDTO.getTitle() != null ? itineraryDTO.getTitle() :
                           itineraryDTO.getDestination() + " 行程");
         itinerary.setDestination(itineraryDTO.getDestination());
         itinerary.setStartDate(itineraryDTO.getStartDate());
@@ -58,16 +72,23 @@ public class ItineraryService {
         itinerary.setBudget(itineraryDTO.getBudget());
         itinerary.setStatus(itineraryDTO.getStatus() != null ? itineraryDTO.getStatus() : "PLANNED");
         itinerary.setSummary(itineraryDTO.getSummary());
+        
+        logger.info("【DEBUG】准备保存主表: {}", itinerary);
         travelItineraryRepository.save(itinerary);
+        logger.info("【DEBUG】主表保存成功");
 
         // 3. 保存每日行程和景点
         if (itineraryDTO.getDays() != null && !itineraryDTO.getDays().isEmpty()) {
+            logger.info("【DEBUG】开始保存 {} 个每日行程", itineraryDTO.getDays().size());
             for (ItineraryDayDTO dayDTO : itineraryDTO.getDays()) {
                 saveItineraryDay(dayDTO, itineraryId);
             }
+            logger.info("【DEBUG】所有每日行程保存完成");
+        } else {
+            logger.warn("【DEBUG】没有 days 数据，跳过保存每日行程");
         }
 
-        logger.info("Itinerary saved successfully - itineraryId: {}", itineraryId);
+        logger.info("========== 【DEBUG】行程保存成功 - itineraryId: {} ==========", itineraryId);
         return itineraryId;
     }
 

@@ -1,5 +1,15 @@
 <!-- pages/itinerary/itinerary.wxml -->
 <view class="container">
+  <view class="map-section" wx:if="{{markers.length > 0}}">
+    <map
+      longitude="{{centerLongitude}}"
+      latitude="{{centerLatitude}}"
+      markers="{{markers}}"
+      style="width: 100%; height: 300px;"
+      show-location="{{false}}"
+    />
+  </view>
+
   <view class="itinerary-header">
     <view class="header-info">
       <text class="itinerary-title">{{itinerary.title}}</text>

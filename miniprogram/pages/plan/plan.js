@@ -128,6 +128,8 @@ Page({
       title: '提交中...'
     })
 
+    console.log('【plan】准备提交表单数据:', this.data.formData)
+
     try {
       const requestData = {
         destination: this.data.formData.destination,
@@ -138,8 +140,13 @@ Page({
         preferences: this.data.formData.preferences
       }
 
-      const result = await api.post('/itinerary/plan', requestData)
+      console.log('【plan】请求后端数据:', requestData)
+      console.log('【plan】调用 api.createPlan()')
+
+      const result = await api.createPlan(requestData)
       
+      console.log('【plan】后端返回结果:', result)
+
       wx.hideLoading()
       
       // 跳转到规划进度页面
@@ -148,7 +155,12 @@ Page({
       })
     } catch (err) {
       wx.hideLoading()
-      console.error('Submit plan failed:', err)
+      console.error('【plan】Submit plan failed:', err)
+      console.error('【plan】Error details:', JSON.stringify(err))
+      wx.showToast({
+        title: '提交失败：' + (err.message || '网络错误'),
+        icon: 'none'
+      })
     }
   }
 })
