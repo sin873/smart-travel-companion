@@ -98,7 +98,7 @@ public class EmbeddingClient {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", modelId);
         requestBody.put("input", batch);
-        requestBody.put("dimension", dimension);  // 直接在根级别设置dimension
+        requestBody.put("dimensions", dimension);  // 百炼兼容接口使用 dimensions 字段
         requestBody.put("encoding_format", "float");  // 添加编码格式
 
         logger.debug("发送嵌入请求 - 模型: {}, 维度: {}, 批次大小: {}, 文本预览: {}",
