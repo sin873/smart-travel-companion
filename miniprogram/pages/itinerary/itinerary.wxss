@@ -1,10 +1,4 @@
 /* pages/itinerary/itinerary.wxss */
-.map-section {
-  margin: 0 -20rpx 20rpx -20rpx;
-  background: white;
-  overflow: hidden;
-}
-
 .itinerary-header {
   background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
   padding: 40rpx 30rpx;

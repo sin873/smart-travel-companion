@@ -1,30 +1,21 @@
-<!-- pages/my-itineraries/my-itineraries.wxml -->
 <view class="container">
-  <!-- 测试按钮 -->
-  <view style="background: #ff0; padding: 20rpx; margin: 20rpx;">
-    <button style="background: #f00; color: #fff;" bindtap="testClick">点击测试（这个应该有反应）</button>
-  </view>
-  <!-- 顶部 -->
   <view class="header">
     <view class="user-info" wx:if="{{userInfo}}">
-      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="avatar placeholder"><text>👤</text></view>
       <view class="user-detail">
-        <text class="user-name">{{userInfo.nickName || '旅行者'}}</text>
-        <text class="user-desc">开启智能旅行</text>
+        <text class="user-name">{{userInfo.nickName}}</text>
+        <text class="user-desc">这里负责查看已保存的行程。</text>
       </view>
     </view>
     <view class="user-info" wx:else bindtap="goToLogin">
-      <view class="avatar placeholder">
-        <text>👤</text>
-      </view>
+      <view class="avatar placeholder"><text>🔐</text></view>
       <view class="user-detail">
         <text class="user-name">点击登录</text>
-        <text class="user-desc">登录后查看您的行程</text>
+        <text class="user-desc">登录后查看和管理你的行程</text>
       </view>
     </view>
   </view>
 
-  <!-- 统计 -->
   <view class="stats-section" wx:if="{{userInfo}}">
     <view class="stat-item">
       <text class="stat-number">{{stats.total}}</text>
@@ -32,7 +23,7 @@
     </view>
     <view class="stat-item">
       <text class="stat-number">{{stats.planned}}</text>
-      <text class="stat-label">规划中</text>
+      <text class="stat-label">已规划</text>
     </view>
     <view class="stat-item">
       <text class="stat-number">{{stats.completed}}</text>
@@ -40,52 +31,39 @@
     </view>
   </view>
 
-  <!-- 行程列表 -->
-  <view class="list-section">
+  <view class="list-section" wx:if="{{userInfo}}">
     <view class="section-header">
       <text class="section-title">我的行程</text>
       <text class="section-action" bindtap="goToPlan">+ 新建行程</text>
     </view>
 
     <view class="itinerary-list" wx:if="{{itineraries.length > 0}}">
-      <view class="itinerary-item card" wx:for="{{itineraries}}" wx:key="itineraryId">
-        <view class="item-content" bindtap="viewItinerary" data-id="{{item.itineraryId}}">
-          <view class="item-header">
-            <text class="item-title">{{item.title}}</text>
-            <view class="item-status {{item.status}}">
-              <text>{{statusText(item.status)}}</text>
-            </view>
-          </view>
-          <view class="item-info">
-            <text class="info-item">📍 {{item.destination}}</text>
-            <text class="info-item">🗓️ {{formatDateRange(item.startDate, item.endDate)}}</text>
-            <text class="info-item">👥 {{item.travelerCount}}人</text>
+      <view class="itinerary-item card" wx:for="{{itineraries}}" wx:key="itineraryId" bindtap="viewItinerary" data-id="{{item.itineraryId}}">
+        <view class="item-header">
+          <text class="item-title">{{item.title}}</text>
+          <view class="item-status {{item.status}}">
+            <text>{{item.statusText}}</text>
           </view>
         </view>
-        <view class="item-actions">
-          <text 
-            class="delete-btn {{deletingItineraryId === item.itineraryId ? 'deleting' : ''}}" 
-            bindtap="deleteItinerary" 
-            data-id="{{item.itineraryId}}"
-          >
-            {{deletingItineraryId === item.itineraryId ? '删除中...' : '删除'}}
-          </text>
+        <view class="item-info">
+          <text class="info-item">📍 {{item.destination}}</text>
+          <text class="info-item">🗓️ {{item.dateRangeText}}</text>
+          <text class="info-item">👥 {{item.travelerCount}}人</text>
         </view>
       </view>
     </view>
 
     <view class="empty-state" wx:else>
       <text class="empty-icon">📋</text>
-      <text class="empty-text">暂无行程</text>
-      <text class="empty-desc">点击新建行程开始规划</text>
-      <button class="empty-btn btn-primary" bindtap="goToPlan">立即规划</button>
+      <text class="empty-text">还没有已保存的行程</text>
+      <text class="empty-desc">先去填写需求，生成你的第一个方案。</text>
+      <button class="empty-btn btn-primary" bindtap="goToPlan">开始规划</button>
     </view>
   </view>
 
-  <!-- 未登录提示 -->
   <view class="login-prompt" wx:if="{{!userInfo}}">
-    <text class="prompt-icon">🔒</text>
-    <text class="prompt-text">登录后查看您的行程</text>
-    <button class="prompt-btn btn-primary" bindtap="goToLogin">立即登录</button>
+    <text class="prompt-icon">🔐</text>
+    <text class="prompt-text">当前未登录，无法查看“我的行程”</text>
+    <button class="prompt-btn btn-primary" bindtap="goToLogin">前往登录</button>
   </view>
 </view>

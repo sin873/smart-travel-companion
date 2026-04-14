@@ -1,59 +1,42 @@
-<!-- pages/login/login.wxml -->
 <view class="container">
   <view class="login-content">
-    <!-- Logo区域 -->
     <view class="logo-section">
-      <view class="logo-icon">
-        <text>🧳</text>
-      </view>
+      <view class="logo-icon"><text>🧳</text></view>
       <text class="logo-title">智能伴旅</text>
-      <text class="logo-subtitle">AI驱动的个性化行程规划</text>
+      <text class="logo-subtitle">最小闭环版本：登录、填写需求、查看行程。</text>
     </view>
 
-    <!-- 功能介绍 -->
     <view class="features-section">
       <view class="feature-item">
-        <view class="feature-icon">
-          <text>🤖</text>
-        </view>
+        <view class="feature-icon"><text>🤖</text></view>
         <view class="feature-text">
-          <text class="feature-title">AI智能规划</text>
-          <text class="feature-desc">基于大模型为您定制专属行程</text>
+          <text class="feature-title">AI 生成行程</text>
+          <text class="feature-desc">根据目的地、日期和人数生成基础方案。</text>
         </view>
       </view>
       <view class="feature-item">
-        <view class="feature-icon">
-          <text>🗺️</text>
-        </view>
+        <view class="feature-icon"><text>📍</text></view>
         <view class="feature-text">
-          <text class="feature-title">知识库支持</text>
-          <text class="feature-desc">整合海量景点信息和攻略</text>
+          <text class="feature-title">行程详情展示</text>
+          <text class="feature-desc">按天查看景点、时间和备注。</text>
         </view>
       </view>
       <view class="feature-item">
-        <view class="feature-icon">
-          <text>✨</text>
-        </view>
+        <view class="feature-icon"><text>📋</text></view>
         <view class="feature-text">
-          <text class="feature-title">个性化推荐</text>
-          <text class="feature-desc">根据您的偏好智能推荐景点</text>
+          <text class="feature-title">保存与管理</text>
+          <text class="feature-desc">保存到“我的行程”，进行基础查看。</text>
         </view>
       </view>
     </view>
 
-    <!-- 登录按钮 -->
     <view class="login-section">
-      <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
-        <text class="btn-icon">微信</text>
-        <text>一键登录</text>
-      </button>
-      
-      <text class="login-tips">登录即表示同意《用户协议》和《隐私政策》</text>
+      <button class="login-btn" bindtap="mockLogin">演示登录</button>
+      <text class="login-tips">当前版本使用本地演示登录，不接真实微信授权。</text>
     </view>
 
-    <!-- 游客模式 -->
     <view class="guest-section">
-      <text class="guest-text" bindtap="guestLogin">先体验一下</text>
+      <text class="guest-text" bindtap="guestLogin">先以游客身份体验</text>
     </view>
   </view>
 </view>

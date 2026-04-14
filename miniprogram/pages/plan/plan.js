@@ -1,4 +1,3 @@
-// pages/plan/plan.js
 const api = require('../../utils/api.js')
 
 Page({
@@ -16,17 +15,22 @@ Page({
         includeMeals: true
       }
     },
+    interestMap: {
+      historical: false,
+      natural: false,
+      cultural: false,
+      shopping: false,
+      food: false
+    },
     canSubmit: false
   },
 
-  onLoad() {
-    this.checkCanSubmit()
-  },
-
-  setDestination(dest) {
-    this.setData({
-      'formData.destination': dest
-    })
+  onLoad(options) {
+    if (options.destination) {
+      this.setData({
+        'formData.destination': decodeURIComponent(options.destination)
+      })
+    }
     this.checkCanSubmit()
   },
 
@@ -83,17 +87,18 @@ Page({
 
   toggleInterest(e) {
     const interest = e.currentTarget.dataset.interest
-    const interests = this.data.formData.preferences.interests
+    const interests = [...this.data.formData.preferences.interests]
     const index = interests.indexOf(interest)
-    
-    if (index > -1) {
+
+    if (index >= 0) {
       interests.splice(index, 1)
     } else {
       interests.push(interest)
     }
-    
+
     this.setData({
-      'formData.preferences.interests': interests
+      'formData.preferences.interests': interests,
+      [`interestMap.${interest}`]: index < 0
     })
   },
 
@@ -111,14 +116,15 @@ Page({
 
   checkCanSubmit() {
     const { destination, startDate, endDate } = this.data.formData
-    const canSubmit = destination && startDate && endDate
-    this.setData({ canSubmit })
+    this.setData({
+      canSubmit: !!(destination && startDate && endDate)
+    })
   },
 
   async submitPlan() {
     if (!this.data.canSubmit) {
       wx.showToast({
-        title: '请填写完整信息',
+        title: '请先补全必填信息',
         icon: 'none'
       })
       return
@@ -128,39 +134,23 @@ Page({
       title: '提交中...'
     })
 
-    console.log('【plan】准备提交表单数据:', this.data.formData)
-
     try {
-      const requestData = {
+      const result = await api.createPlan({
         destination: this.data.formData.destination,
         startDate: this.data.formData.startDate,
         endDate: this.data.formData.endDate,
         travelerCount: this.data.formData.travelerCount,
-        budget: this.data.formData.budget ? parseFloat(this.data.formData.budget) : null,
+        budget: this.data.formData.budget ? Number(this.data.formData.budget) : null,
         preferences: this.data.formData.preferences
-      }
-
-      console.log('【plan】请求后端数据:', requestData)
-      console.log('【plan】调用 api.createPlan()')
-
-      const result = await api.createPlan(requestData)
-      
-      console.log('【plan】后端返回结果:', result)
+      })
 
       wx.hideLoading()
-      
-      // 跳转到规划进度页面
       wx.navigateTo({
         url: `/pages/planning/planning?taskId=${result.taskId}`
       })
     } catch (err) {
       wx.hideLoading()
-      console.error('【plan】Submit plan failed:', err)
-      console.error('【plan】Error details:', JSON.stringify(err))
-      wx.showToast({
-        title: '提交失败：' + (err.message || '网络错误'),
-        icon: 'none'
-      })
+      console.error('Submit plan failed:', err)
     }
   }
 })

@@ -1,4 +1,3 @@
-// utils/api.js
 const app = getApp()
 
 function request(url, method = 'GET', data = {}) {
@@ -6,40 +5,28 @@ function request(url, method = 'GET', data = {}) {
     const header = {
       'content-type': 'application/json'
     }
-    
+
     if (app.globalData.token) {
-      header['Authorization'] = 'Bearer ' + app.globalData.token
+      header.Authorization = `Bearer ${app.globalData.token}`
     }
 
     wx.request({
       url: app.globalData.baseUrl + url,
-      method: method,
-      data: data,
-      header: header,
+      method,
+      data,
+      header,
       success: (res) => {
-        if (res.statusCode === 200) {
-          if (res.data.code === 200) {
-            resolve(res.data.data)
-          } else {
-            wx.showToast({
-              title: res.data.message || '请求失败',
-              icon: 'none'
-            })
-            reject(res.data)
-          }
-        } else if (res.statusCode === 401) {
-          app.clearAuth()
-          wx.navigateTo({
-            url: '/pages/login/login'
-          })
-          reject(res)
-        } else {
-          wx.showToast({
-            title: '网络错误',
-            icon: 'none'
-          })
-          reject(res)
+        if (res.statusCode === 200 && res.data && res.data.code === 200) {
+          resolve(res.data.data)
+          return
         }
+
+        const message = (res.data && res.data.message) || '请求失败'
+        wx.showToast({
+          title: message,
+          icon: 'none'
+        })
+        reject(res.data || res)
       },
       fail: (err) => {
         wx.showToast({
@@ -55,12 +42,9 @@ function request(url, method = 'GET', data = {}) {
 module.exports = {
   get: (url, data) => request(url, 'GET', data),
   post: (url, data) => request(url, 'POST', data),
-  
-  // 旅游规划相关API
+  delete: (url, data) => request(url, 'DELETE', data),
   createPlan: (data) => request('/plan', 'POST', data),
   getPlanStatus: (taskId) => request(`/plan/${taskId}`, 'GET'),
-  
-  // 行程相关API
   saveItinerary: (data) => request('/itineraries', 'POST', data),
   getItineraryList: () => request('/itineraries', 'GET'),
   getItineraryDetail: (itineraryId) => request(`/itineraries/${itineraryId}`, 'GET'),

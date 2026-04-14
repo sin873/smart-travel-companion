@@ -1,63 +1,63 @@
-<!-- pages/index/index.wxml -->
 <view class="container">
-  <!-- 顶部欢迎区 -->
   <view class="welcome-section">
     <view class="welcome-card card">
       <view class="welcome-header">
-        <text class="welcome-title">你好,{{userInfo.nickName || '旅行者'}} 👋</text>
-        <text class="welcome-subtitle">今天想去哪里玩?</text>
+        <text class="welcome-title">Hello, {{userInfo ? userInfo.nickName : 'Traveler'}}</text>
+        <text class="welcome-subtitle">Start with one destination.</text>
       </view>
-      <image class="welcome-image" src="/images/travel.png" mode="aspectFit"></image>
+      <view class="welcome-image flex-center">
+        <text>START</text>
+      </view>
     </view>
   </view>
 
-  <!-- 快捷入口 -->
   <view class="quick-actions">
     <view class="section-title">
-      <text class="title-text">快捷功能</text>
+      <text class="title-text">Quick Actions</text>
     </view>
-    
-    <view class="action-grid">
+    <view class="action-grid card">
       <view class="action-item" bindtap="goToPlan">
         <view class="action-icon plan-icon">
-          <text>🗺️</text>
+          <text>PLAN</text>
         </view>
-        <text class="action-text">定制行程</text>
+        <text class="action-text">Create Plan</text>
       </view>
-      
       <view class="action-item" bindtap="goToMyItineraries">
         <view class="action-icon itinerary-icon">
-          <text>📋</text>
+          <text>LIST</text>
         </view>
-        <text class="action-text">我的行程</text>
+        <text class="action-text">My Trips</text>
       </view>
-      
       <view class="action-item" bindtap="showComingSoon">
         <view class="action-icon chat-icon">
-          <text>💬</text>
+          <text>ASK</text>
         </view>
-        <text class="action-text">智能咨询</text>
+        <text class="action-text">Ask AI</text>
       </view>
-      
       <view class="action-item" bindtap="showComingSoon">
         <view class="action-icon guide-icon">
-          <text>📚</text>
+          <text>GUIDE</text>
         </view>
-        <text class="action-text">攻略推荐</text>
+        <text class="action-text">Guides</text>
       </view>
     </view>
   </view>
 
-  <!-- 热门目的地 -->
-  <view class="destinations">
+  <view class="destinations card">
     <view class="section-title">
-      <text class="title-text">热门目的地</text>
-      <text class="more-text">查看更多 ></text>
+      <text class="title-text">Popular Destinations</text>
     </view>
-    
     <scroll-view class="destination-list" scroll-x="true">
-      <view class="destination-item" wx:for="{{destinations}}" wx:key="id" bindtap="selectDestination" data-dest="{{item.name}}">
-        <image class="dest-image" src="{{item.image}}" mode="aspectFill"></image>
+      <view
+        wx:for="{{destinations}}"
+        wx:key="id"
+        class="destination-item"
+        bindtap="selectDestination"
+        data-dest="{{item.name}}"
+      >
+        <view class="dest-image flex-center">
+          <text>{{item.name}}</text>
+        </view>
         <view class="dest-info">
           <text class="dest-name">{{item.name}}</text>
           <text class="dest-desc">{{item.desc}}</text>

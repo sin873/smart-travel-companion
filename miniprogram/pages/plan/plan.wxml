@@ -1,26 +1,17 @@
-<!-- pages/plan/plan.wxml -->
 <view class="container">
-  <!-- 表单标题 -->
   <view class="form-header">
-    <text class="header-title">定制您的专属行程</text>
-    <text class="header-subtitle">告诉我们您的需求,AI为您智能规划</text>
+    <text class="header-title">填写行程需求</text>
+    <text class="header-subtitle">这一步只负责收集最小输入：目的地、日期、人数。</text>
   </view>
 
-  <!-- 目的地选择 -->
   <view class="form-section card">
     <view class="section-label">
       <text class="label-icon">📍</text>
       <text class="label-text">目的地</text>
     </view>
-    <input 
-      class="form-input" 
-      placeholder="请输入目的地,如:北京、上海" 
-      value="{{formData.destination}}"
-      bindinput="onDestinationInput"
-    />
+    <input class="form-input" placeholder="例如：北京、上海、杭州" value="{{formData.destination}}" bindinput="onDestinationInput" />
   </view>
 
-  <!-- 日期选择 -->
   <view class="form-section card">
     <view class="section-label">
       <text class="label-icon">📅</text>
@@ -28,120 +19,61 @@
     </view>
     <view class="date-picker-row">
       <picker mode="date" value="{{formData.startDate}}" bindchange="onStartDateChange">
-        <view class="date-picker">
-          <text class="date-text">{{formData.startDate || '选择开始日期'}}</text>
-        </view>
+        <view class="date-picker"><text class="date-text">{{formData.startDate || '开始日期'}}</text></view>
       </picker>
       <text class="date-separator">至</text>
       <picker mode="date" value="{{formData.endDate}}" bindchange="onEndDateChange">
-        <view class="date-picker">
-          <text class="date-text">{{formData.endDate || '选择结束日期'}}</text>
-        </view>
+        <view class="date-picker"><text class="date-text">{{formData.endDate || '结束日期'}}</text></view>
       </picker>
     </view>
   </view>
 
-  <!-- 人数选择 -->
   <view class="form-section card">
     <view class="section-label">
       <text class="label-icon">👥</text>
       <text class="label-text">出行人数</text>
     </view>
     <view class="counter-row">
-      <view class="counter-btn" bindtap="decreaseCount">
-        <text>−</text>
-      </view>
+      <view class="counter-btn" bindtap="decreaseCount"><text>-</text></view>
       <text class="count-text">{{formData.travelerCount}}</text>
-      <view class="counter-btn" bindtap="increaseCount">
-        <text>+</text>
-      </view>
+      <view class="counter-btn" bindtap="increaseCount"><text>+</text></view>
     </view>
   </view>
 
-  <!-- 预算选择 -->
   <view class="form-section card">
     <view class="section-label">
       <text class="label-icon">💰</text>
-      <text class="label-text">预算范围 (可选)</text>
+      <text class="label-text">预算范围（可选）</text>
     </view>
-    <input 
-      class="form-input" 
-      type="digit"
-      placeholder="请输入预算金额" 
-      value="{{formData.budget}}"
-      bindinput="onBudgetInput"
-    />
+    <input class="form-input" type="digit" placeholder="请输入预算金额" value="{{formData.budget}}" bindinput="onBudgetInput" />
   </view>
 
-  <!-- 出行节奏 -->
   <view class="form-section card">
     <view class="section-label">
-      <text class="label-icon">🏃</text>
+      <text class="label-icon">🎯</text>
       <text class="label-text">出行节奏</text>
     </view>
     <view class="options-row">
-      <view 
-        class="option-item {{formData.preferences.pace === 'relaxed' ? 'active' : ''}}" 
-        bindtap="selectPace" data-pace="relaxed"
-      >
-        <text>😌 休闲</text>
-      </view>
-      <view 
-        class="option-item {{formData.preferences.pace === 'moderate' ? 'active' : ''}}" 
-        bindtap="selectPace" data-pace="moderate"
-      >
-        <text>🚶 适中</text>
-      </view>
-      <view 
-        class="option-item {{formData.preferences.pace === 'intensive' ? 'active' : ''}}" 
-        bindtap="selectPace" data-pace="intensive"
-      >
-        <text>🏃 紧凑</text>
-      </view>
+      <view class="option-item {{formData.preferences.pace === 'relaxed' ? 'active' : ''}}" bindtap="selectPace" data-pace="relaxed"><text>轻松</text></view>
+      <view class="option-item {{formData.preferences.pace === 'moderate' ? 'active' : ''}}" bindtap="selectPace" data-pace="moderate"><text>适中</text></view>
+      <view class="option-item {{formData.preferences.pace === 'intensive' ? 'active' : ''}}" bindtap="selectPace" data-pace="intensive"><text>紧凑</text></view>
     </view>
   </view>
 
-  <!-- 兴趣选择 -->
   <view class="form-section card">
     <view class="section-label">
-      <text class="label-icon">❤️</text>
+      <text class="label-icon">⭐</text>
       <text class="label-text">兴趣偏好</text>
     </view>
     <view class="interests-grid">
-      <view 
-        class="interest-item {{formData.preferences.interests.includes('historical') ? 'active' : ''}}" 
-        bindtap="toggleInterest" data-interest="historical"
-      >
-        <text>🏛️ 历史文化</text>
-      </view>
-      <view 
-        class="interest-item {{formData.preferences.interests.includes('natural') ? 'active' : ''}}" 
-        bindtap="toggleInterest" data-interest="natural"
-      >
-        <text>🌿 自然风光</text>
-      </view>
-      <view 
-        class="interest-item {{formData.preferences.interests.includes('cultural') ? 'active' : ''}}" 
-        bindtap="toggleInterest" data-interest="cultural"
-      >
-        <text>🎭 民俗体验</text>
-      </view>
-      <view 
-        class="interest-item {{formData.preferences.interests.includes('shopping') ? 'active' : ''}}" 
-        bindtap="toggleInterest" data-interest="shopping"
-      >
-        <text>🛍️ 购物</text>
-      </view>
-      <view 
-        class="interest-item {{formData.preferences.interests.includes('food') ? 'active' : ''}}" 
-        bindtap="toggleInterest" data-interest="food"
-      >
-        <text>🍜 美食</text>
-      </view>
+      <view class="interest-item {{interestMap.historical ? 'active' : ''}}" bindtap="toggleInterest" data-interest="historical"><text>历史文化</text></view>
+      <view class="interest-item {{interestMap.natural ? 'active' : ''}}" bindtap="toggleInterest" data-interest="natural"><text>自然风光</text></view>
+      <view class="interest-item {{interestMap.cultural ? 'active' : ''}}" bindtap="toggleInterest" data-interest="cultural"><text>民俗体验</text></view>
+      <view class="interest-item {{interestMap.shopping ? 'active' : ''}}" bindtap="toggleInterest" data-interest="shopping"><text>购物</text></view>
+      <view class="interest-item {{interestMap.food ? 'active' : ''}}" bindtap="toggleInterest" data-interest="food"><text>美食</text></view>
     </view>
   </view>
 
-  <!-- 其他选项 -->
   <view class="form-section card">
     <view class="section-label">
       <text class="label-icon">⚙️</text>
@@ -157,14 +89,7 @@
     </view>
   </view>
 
-  <!-- 提交按钮 -->
   <view class="submit-section">
-    <button 
-      class="submit-btn btn-primary" 
-      bindtap="submitPlan"
-      disabled="{{!canSubmit}}"
-    >
-      开始规划
-    </button>
+    <button class="submit-btn btn-primary" bindtap="submitPlan" disabled="{{!canSubmit}}">开始规划</button>
   </view>
 </view>

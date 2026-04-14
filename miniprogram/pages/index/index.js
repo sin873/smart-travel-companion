@@ -1,46 +1,27 @@
-// pages/index/index.js
 const app = getApp()
 
 Page({
   data: {
     userInfo: null,
     destinations: [
-      {
-        id: 1,
-        name: '北京',
-        desc: '千年古都,文化之旅',
-        image: 'https://picsum.photos/300/280?random=1'
-      },
-      {
-        id: 2,
-        name: '上海',
-        desc: '现代都市,时尚之旅',
-        image: 'https://picsum.photos/300/280?random=2'
-      },
-      {
-        id: 3,
-        name: '杭州',
-        desc: '西湖美景,诗意之旅',
-        image: 'https://picsum.photos/300/280?random=3'
-      },
-      {
-        id: 4,
-        name: '成都',
-        desc: '美食天堂,休闲之旅',
-        image: 'https://picsum.photos/300/280?random=4'
-      }
+      { id: 1, name: 'Beijing', desc: 'Classic city route' },
+      { id: 2, name: 'Shanghai', desc: 'Modern city route' },
+      { id: 3, name: 'Hangzhou', desc: 'Lake and culture route' },
+      { id: 4, name: 'Chengdu', desc: 'Food and leisure route' }
     ]
   },
 
   onLoad() {
-    this.setData({
-      userInfo: app.globalData.userInfo
-    })
+    this.syncUserInfo()
   },
 
   onShow() {
+    this.syncUserInfo()
+  },
+
+  syncUserInfo() {
     this.setData({
-      userInfo: app.globalData.userInfo
+      userInfo: app.globalData.userInfo || null
     })
   },
 
@@ -57,22 +38,15 @@ Page({
   },
 
   selectDestination(e) {
-    const dest = e.currentTarget.dataset.dest
+    const destination = e.currentTarget.dataset.dest
     wx.navigateTo({
-      url: '/pages/plan/plan',
-      success: () => {
-        const pages = getCurrentPages()
-        const currentPage = pages[pages.length - 1]
-        if (currentPage && currentPage.setDestination) {
-          currentPage.setDestination(dest)
-        }
-      }
+      url: `/pages/plan/plan?destination=${encodeURIComponent(destination)}`
     })
   },
 
   showComingSoon() {
     wx.showToast({
-      title: '功能开发中,敬请期待',
+      title: 'Coming soon',
       icon: 'none'
     })
   }

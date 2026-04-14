@@ -1,12 +1,5 @@
-// app.js
 App({
   onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 检查登录状态
     this.checkLoginStatus()
   },
 
@@ -18,12 +11,14 @@ App({
 
   checkLoginStatus() {
     const token = wx.getStorageSync('token')
+    const userInfo = wx.getStorageSync('userInfo')
+
     if (token) {
       this.globalData.token = token
-      const userInfo = wx.getStorageSync('userInfo')
-      if (userInfo) {
-        this.globalData.userInfo = userInfo
-      }
+    }
+
+    if (userInfo) {
+      this.globalData.userInfo = userInfo
     }
   },
 
