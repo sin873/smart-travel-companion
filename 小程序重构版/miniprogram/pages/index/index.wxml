@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="card hero">
+    <text class="hero-title">你好，{{displayName}}</text>
+    <text class="hero-desc">从填写需求开始，生成并保存你的旅行行程。</text>
+  </view>
+
+  <view class="section">
+    <text class="section-title">快捷入口</text>
+    <view class="action-list">
+      <button class="primary-btn" bindtap="goToPlan">开始规划</button>
+      <button bindtap="goToMyItineraries">我的行程</button>
+      <button bindtap="goToLogin">演示登录</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <text class="section-title">热门目的地</text>
+    <view
+      wx:for="{{destinations}}"
+      wx:key="id"
+      class="card destination"
+      bindtap="selectDestination"
+      data-destination="{{item.name}}"
+    >
+      <text class="destination-name">{{item.name}}</text>
+      <text class="muted">{{item.desc}}</text>
+    </view>
+  </view>
+</view>

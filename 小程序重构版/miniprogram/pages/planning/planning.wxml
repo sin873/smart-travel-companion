@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="card">
+    <text class="section-title">行程生成中</text>
+    <text class="status">状态：{{status}}</text>
+    <text class="message">{{message}}</text>
+    <progress percent="{{progress}}" stroke-width="8" active />
+
+    <button
+      wx:if="{{itinerary}}"
+      class="primary-btn result-btn"
+      bindtap="viewItinerary"
+    >
+      查看行程
+    </button>
+  </view>
+</view>

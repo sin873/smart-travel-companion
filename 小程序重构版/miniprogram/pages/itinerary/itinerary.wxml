@@ -1,0 +1,54 @@
+<view class="container" wx:if="{{itinerary}}">
+  <view wx:if="{{itinerary.hasMap}}" class="card map-card">
+    <text class="map-title">地图总览</text>
+    <map
+      class="itinerary-map"
+      latitude="{{itinerary.mapLatitude}}"
+      longitude="{{itinerary.mapLongitude}}"
+      scale="11"
+      markers="{{itinerary.mapMarkers}}"
+      show-location="false"
+    />
+  </view>
+
+  <view class="card summary-card">
+    <text class="title">{{itinerary.titleText}}</text>
+    <text class="meta-line">目的地：{{itinerary.destinationText}}</text>
+    <text class="meta-line">日期：{{itinerary.dateRangeText}}</text>
+
+    <button wx:if="{{isPreview}}" class="primary-btn save-btn" bindtap="saveItinerary" loading="{{saving}}">
+      保存行程
+    </button>
+  </view>
+
+  <view wx:if="{{itinerary.hasDays}}">
+    <view wx:for="{{itinerary.days}}" wx:key="dayId" class="card day-card">
+      <text class="day-title">第{{item.dayNumber}}天 {{item.titleText}}</text>
+      <text class="day-date">{{item.dateText}}</text>
+      <text wx:if="{{item.notesText}}" class="day-notes">{{item.notesText}}</text>
+
+      <view wx:if="{{item.hasItems}}">
+        <view wx:for="{{item.items}}" wx:key="itemId" class="spot-card">
+          <text class="spot-line"><text class="spot-label">时间：</text>{{item.timeText}}</text>
+          <text class="spot-line"><text class="spot-label">名称：</text>{{item.name}}</text>
+          <text class="spot-line"><text class="spot-label">地址：</text>{{item.addressText}}</text>
+          <text class="spot-line"><text class="spot-label">备注：</text>{{item.notesText}}</text>
+        </view>
+      </view>
+
+      <view wx:else class="empty-box">
+        <text class="empty-text">当天暂无景点安排</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="card">
+    <text class="empty-text">暂无每日行程</text>
+  </view>
+</view>
+
+<view class="container" wx:else>
+  <view class="card">
+    <text class="empty-text">暂无行程数据</text>
+  </view>
+</view>

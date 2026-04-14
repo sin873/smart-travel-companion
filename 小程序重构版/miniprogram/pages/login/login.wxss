@@ -1,0 +1,12 @@
+.input {
+  height: 80rpx;
+  margin: 16rpx 0 24rpx;
+  padding: 0 20rpx;
+  border: 2rpx solid #dbe3ef;
+  border-radius: 16rpx;
+  background: #ffffff;
+}
+
+button {
+  margin-bottom: 16rpx;
+}

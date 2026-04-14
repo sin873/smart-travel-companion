@@ -1,0 +1,31 @@
+.hero {
+  background: linear-gradient(135deg, #1989fa, #5fb4ff);
+  color: #ffffff;
+}
+
+.hero-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.hero-desc {
+  display: block;
+  margin-top: 12rpx;
+  opacity: 0.92;
+}
+
+.action-list button {
+  margin-bottom: 16rpx;
+}
+
+.destination {
+  margin-bottom: 16rpx;
+}
+
+.destination-name {
+  display: block;
+  margin-bottom: 8rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}

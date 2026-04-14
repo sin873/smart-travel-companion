@@ -1,0 +1,78 @@
+<view class="container">
+  <view class="card">
+    <text class="section-title">行程需求</text>
+
+    <text class="label">目的地</text>
+    <input
+      class="input"
+      type="text"
+      placeholder="例如：北京"
+      value="{{formData.destination}}"
+      bindinput="onDestinationInput"
+    />
+
+    <text class="label">开始日期</text>
+    <input
+      class="input"
+      type="text"
+      placeholder="YYYY-MM-DD"
+      value="{{formData.startDate}}"
+      bindinput="onStartDateInput"
+    />
+
+    <text class="label">结束日期</text>
+    <input
+      class="input"
+      type="text"
+      placeholder="YYYY-MM-DD"
+      value="{{formData.endDate}}"
+      bindinput="onEndDateInput"
+    />
+
+    <text class="label">出行人数</text>
+    <view class="counter">
+      <button size="mini" bindtap="decreaseCount">-</button>
+      <text class="count">{{formData.travelerCount}}</text>
+      <button size="mini" bindtap="increaseCount">+</button>
+    </view>
+
+    <text class="label">预算（可选）</text>
+    <input
+      class="input"
+      type="number"
+      placeholder="例如：2000"
+      value="{{formData.budget}}"
+      bindinput="onBudgetInput"
+    />
+
+    <text class="label">出行节奏</text>
+    <view class="tag-row">
+      <view
+        wx:for="{{paceOptions}}"
+        wx:key="value"
+        class="{{item.className}}"
+        bindtap="selectPace"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </view>
+
+    <text class="label">兴趣偏好</text>
+    <view class="tag-row">
+      <view
+        wx:for="{{interestOptions}}"
+        wx:key="value"
+        class="{{item.className}}"
+        bindtap="toggleInterest"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </view>
+
+    <button class="primary-btn submit-btn" bindtap="submitPlan" disabled="{{!canSubmit}}">
+      提交需求
+    </button>
+  </view>
+</view>

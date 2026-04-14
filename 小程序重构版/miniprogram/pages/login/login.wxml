@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="card">
+    <text class="section-title">演示登录</text>
+    <input
+      class="input"
+      placeholder="输入昵称"
+      value="{{nickname}}"
+      bindinput="onNicknameInput"
+    />
+    <button class="primary-btn" bindtap="useDemoLogin">保存并返回</button>
+    <button class="danger-btn" bindtap="clearLogin">清空登录状态</button>
+  </view>
+</view>

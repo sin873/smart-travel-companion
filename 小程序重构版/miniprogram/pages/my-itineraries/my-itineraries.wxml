@@ -1,0 +1,19 @@
+<view class="container">
+  <view wx:if="{{isEmpty}}" class="card">
+    <text>暂时还没有已保存的行程</text>
+  </view>
+
+  <view wx:for="{{items}}" wx:key="itineraryId" class="card itinerary-card">
+    <text class="item-title">{{item.displayTitle}}</text>
+    <text class="muted">{{item.destination}} · {{item.startDate}} 至 {{item.endDate}}</text>
+    <text class="muted">人数：{{item.displayTravelerCount}}</text>
+    <view class="btn-row">
+      <button size="mini" class="primary-btn" bindtap="viewDetail" data-id="{{item.itineraryId}}">
+        查看
+      </button>
+      <button size="mini" class="danger-btn" bindtap="deleteItem" data-id="{{item.itineraryId}}">
+        删除
+      </button>
+    </view>
+  </view>
+</view>

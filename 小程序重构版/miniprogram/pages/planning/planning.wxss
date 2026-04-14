@@ -1,0 +1,9 @@
+.status,
+.message {
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.result-btn {
+  margin-top: 24rpx;
+}

@@ -1,0 +1,24 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/plan/plan",
+    "pages/planning/planning",
+    "pages/itinerary/itinerary",
+    "pages/my-itineraries/my-itineraries"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1989fa",
+    "navigationBarTitleText": "智能伴旅",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fb"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在地图中展示当前位置并辅助查看行程景点"
+    }
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
