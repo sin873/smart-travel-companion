@@ -133,6 +133,9 @@ travel:
     api-key: ${AMAP_API_KEY:b4a4f48b3c7e0f7401316f33997ad1c2}
     poi-url: https://restapi.amap.com/v3/place/text
     direction-url: https://restapi.amap.com/v3/direction/driving
+    connect-timeout-seconds: 10
+    read-timeout-seconds: 20
+    call-timeout-seconds: 30
   agent:
     provider: legacy
     rag-top-k: 4
