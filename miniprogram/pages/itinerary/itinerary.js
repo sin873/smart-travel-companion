@@ -80,7 +80,7 @@ Page({
   },
 
   isKnowledgeHint(line) {
-    return ['知识库', 'RAG', '本地资料', '补充', '提示'].some(keyword => line.includes(keyword))
+    return ['知识库', 'RAG', '本地资料', '补充'].some(keyword => line.includes(keyword))
   },
 
   buildDisplayTime(startTime, endTime) {
