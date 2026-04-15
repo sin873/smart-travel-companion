@@ -1,9 +1,9 @@
 <view class="container">
   <view class="planning-content">
     <view class="status-icon">
-      <text wx:if="{{status === 'QUEUED' || status === 'PROCESSING'}}">🤖</text>
+      <text wx:if="{{status === 'QUEUED' || status === 'PROCESSING'}}">⏳</text>
       <text wx:elif="{{status === 'COMPLETED'}}">🎉</text>
-      <text wx:else>😥</text>
+      <text wx:else>⚠️</text>
     </view>
 
     <view class="status-text">
@@ -38,6 +38,16 @@
         <view class="step-circle"><text>4</text></view>
         <text class="step-text">生成结果</text>
       </view>
+    </view>
+
+    <view class="result-preview card" wx:if="{{status === 'COMPLETED' && itinerary}}">
+      <text class="preview-title">{{itinerary.title}}</text>
+      <view class="preview-meta">
+        <text class="preview-tag">{{itinerary.destination}}</text>
+        <text class="preview-tag">{{dayCount}}天</text>
+        <text class="preview-tag">{{itinerary.travelerCount}}人</text>
+      </view>
+      <text class="preview-summary" wx:if="{{summaryPreview}}">{{summaryPreview}}</text>
     </view>
 
     <view class="completed-section" wx:if="{{status === 'COMPLETED'}}">
