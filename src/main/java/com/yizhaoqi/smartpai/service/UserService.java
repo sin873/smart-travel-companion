@@ -37,7 +37,7 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     
-    private static final String DEFAULT_ORG_TAG = "DEFAULT";
+    private static final String DEFAULT_ORG_TAG = "default";
     private static final String DEFAULT_ORG_NAME = "默认组织";
     private static final String DEFAULT_ORG_DESCRIPTION = "系统默认组织标签，自动分配给所有新用户";
     private static final String PRIVATE_TAG_PREFIX = "PRIVATE_";

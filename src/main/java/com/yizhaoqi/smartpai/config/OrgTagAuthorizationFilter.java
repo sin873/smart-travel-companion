@@ -134,7 +134,7 @@ public class OrgTagAuthorizationFilter extends OncePerRequestFilter {
             if (resourceInfo.isPublic() || 
                 resourceOrgTag == null || 
                 resourceOrgTag.isEmpty() || 
-                DEFAULT_ORG_TAG.equals(resourceOrgTag)) {
+                DEFAULT_ORG_TAG.equalsIgnoreCase(resourceOrgTag)) {
                 logger.debug("资源是公开的或无组织标签或属于默认组织，放行请求");
                 filterChain.doFilter(request, response);
                 return;
