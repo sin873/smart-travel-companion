@@ -1,5 +1,7 @@
 const api = require('../../utils/api.js')
 
+const POLL_INTERVAL = 2000
+
 Page({
   data: {
     taskId: '',
@@ -9,29 +11,44 @@ Page({
     statusTitle: 'AI 正在生成行程',
     currentStep: 1,
     itinerary: null,
+    summaryPreview: '',
+    dayCount: 0,
     pollingTimer: null
   },
 
   onLoad(options) {
-    if (options.taskId) {
-      this.setData({ taskId: options.taskId })
-      this.startPolling()
+    if (!options.taskId) {
+      wx.showToast({
+        title: '缺少任务编号',
+        icon: 'none'
+      })
+      return
     }
+
+    this.setData({ taskId: options.taskId })
+    this.startPolling()
   },
 
   onUnload() {
-    if (this.data.pollingTimer) {
-      clearInterval(this.data.pollingTimer)
-    }
+    this.clearPollingTimer()
   },
 
   startPolling() {
+    this.clearPollingTimer()
     this.pollStatus()
+
     const pollingTimer = setInterval(() => {
       this.pollStatus()
-    }, 2000)
+    }, POLL_INTERVAL)
 
     this.setData({ pollingTimer })
+  },
+
+  clearPollingTimer() {
+    if (this.data.pollingTimer) {
+      clearInterval(this.data.pollingTimer)
+      this.setData({ pollingTimer: null })
+    }
   },
 
   async pollStatus() {
@@ -40,8 +57,7 @@ Page({
       this.updateStatus(result)
 
       if (result.status === 'COMPLETED' || result.status === 'FAILED') {
-        clearInterval(this.data.pollingTimer)
-        this.setData({ pollingTimer: null })
+        this.clearPollingTimer()
       }
     } catch (err) {
       console.error('Poll status failed:', err)
@@ -49,7 +65,8 @@ Page({
   },
 
   updateStatus(result) {
-    const progress = result.progress || 0
+    const itinerary = result.itinerary || null
+    const progress = typeof result.progress === 'number' ? result.progress : 0
     const statusTitleMap = {
       QUEUED: '任务排队中',
       PROCESSING: 'AI 正在生成行程',
@@ -63,7 +80,9 @@ Page({
       message: result.message || '',
       statusTitle: statusTitleMap[result.status] || '处理中',
       currentStep: this.getCurrentStep(progress, result.status),
-      itinerary: result.itinerary || null
+      itinerary,
+      summaryPreview: this.getSummaryPreview(itinerary),
+      dayCount: itinerary && itinerary.days ? itinerary.days.length : 0
     })
   },
 
@@ -75,8 +94,20 @@ Page({
     return 4
   },
 
+  getSummaryPreview(itinerary) {
+    if (!itinerary || !itinerary.summary) {
+      return ''
+    }
+
+    return String(itinerary.summary).split('\n').filter(Boolean)[0] || ''
+  },
+
   viewItinerary() {
     if (!this.data.itinerary) {
+      wx.showToast({
+        title: '结果尚未生成',
+        icon: 'none'
+      })
       return
     }
 

@@ -14,6 +14,23 @@
       </view>
     </view>
 
+    <view class="summary-card card" wx:if="{{overviewSummary}}">
+      <text class="section-title">行程概览</text>
+      <text class="summary-text">{{overviewSummary}}</text>
+    </view>
+
+    <view class="summary-card card" wx:if="{{agentAdvice}}">
+      <text class="section-title">Agent 建议</text>
+      <text class="summary-text">{{agentAdvice}}</text>
+    </view>
+
+    <view class="summary-card card" wx:if="{{ragHints.length}}">
+      <text class="section-title">RAG 补充信息</text>
+      <view class="hint-list">
+        <text class="hint-item" wx:for="{{ragHints}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
     <view class="days-container">
       <view class="day-card" wx:for="{{itinerary.days}}" wx:key="dayId" wx:for-item="day" wx:for-index="dayIndex">
         <view class="day-header" bindtap="toggleDay" data-index="{{dayIndex}}">
@@ -26,14 +43,17 @@
         </view>
 
         <view class="day-content" wx:if="{{day.expanded}}">
-          <view class="timeline">
+          <view class="timeline" wx:if="{{day.attractions.length}}">
             <view class="timeline-item" wx:for="{{day.attractions}}" wx:key="itemId" wx:for-item="attr" wx:for-index="attrIndex">
               <view class="timeline-dot"></view>
               <view class="timeline-line" wx:if="{{attrIndex < day.attractions.length - 1}}"></view>
               <view class="timeline-content card">
                 <view class="attr-time"><text>{{attr.displayTime}}</text></view>
                 <view class="attr-name">{{attr.attractionName}}</view>
-                <view class="attr-duration"><text>⏱️ {{attr.durationMinutes}}分钟</text></view>
+                <view class="attr-duration"><text>⏱ {{attr.durationMinutes}}分钟</text></view>
+                <view class="attr-address" wx:if="{{attr.address}}">
+                  <text>{{attr.address}}</text>
+                </view>
                 <view class="attr-notes" wx:if="{{attr.notes}}">
                   <text>{{attr.notes}}</text>
                 </view>
@@ -41,8 +61,12 @@
             </view>
           </view>
 
+          <view class="empty-day card" wx:else>
+            <text>当天暂未生成具体景点安排</text>
+          </view>
+
           <view class="day-notes" wx:if="{{day.notes}}">
-            <text class="notes-label">📝 当日备注</text>
+            <text class="notes-label">📍 当日备注</text>
             <text class="notes-text">{{day.notes}}</text>
           </view>
         </view>

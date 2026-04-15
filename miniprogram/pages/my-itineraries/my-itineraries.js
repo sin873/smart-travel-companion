@@ -5,6 +5,7 @@ Page({
   data: {
     userInfo: null,
     itineraries: [],
+    loading: false,
     stats: {
       total: 0,
       planned: 0,
@@ -30,12 +31,15 @@ Page({
   },
 
   async loadItineraries() {
+    this.setData({ loading: true })
+
     try {
       const result = await api.getItineraryList()
-      const items = (result.items || []).map((item) => ({
+      const items = (result.items || []).map(item => ({
         ...item,
         statusText: this.getStatusText(item.status),
-        dateRangeText: this.getDateRangeText(item.startDate, item.endDate)
+        dateRangeText: this.getDateRangeText(item.startDate, item.endDate),
+        summaryText: this.getSummaryText(item.summary)
       }))
 
       this.setData({
@@ -48,6 +52,8 @@ Page({
       })
     } catch (err) {
       console.error('Load itineraries failed:', err)
+    } finally {
+      this.setData({ loading: false })
     }
   },
 
@@ -57,12 +63,20 @@ Page({
       PLANNED: '已规划',
       COMPLETED: '已完成'
     }
-    return map[status] || status
+    return map[status] || status || '未知状态'
   },
 
   getDateRangeText(start, end) {
     if (!start || !end) return ''
     return `${start} - ${end}`
+  },
+
+  getSummaryText(summary) {
+    if (!summary) {
+      return ''
+    }
+
+    return String(summary).split('\n').filter(Boolean)[0] || ''
   },
 
   viewItinerary(e) {

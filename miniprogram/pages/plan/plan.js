@@ -22,7 +22,8 @@ Page({
       shopping: false,
       food: false
     },
-    canSubmit: false
+    canSubmit: false,
+    submitting: false
   },
 
   onLoad(options) {
@@ -121,15 +122,35 @@ Page({
     })
   },
 
+  validateForm() {
+    const { destination, startDate, endDate } = this.data.formData
+
+    if (!destination || !startDate || !endDate) {
+      return '请先补全必填信息'
+    }
+
+    if (new Date(endDate).getTime() < new Date(startDate).getTime()) {
+      return '结束日期不能早于开始日期'
+    }
+
+    return ''
+  },
+
   async submitPlan() {
-    if (!this.data.canSubmit) {
+    if (this.data.submitting) {
+      return
+    }
+
+    const validationMessage = this.validateForm()
+    if (validationMessage) {
       wx.showToast({
-        title: '请先补全必填信息',
+        title: validationMessage,
         icon: 'none'
       })
       return
     }
 
+    this.setData({ submitting: true })
     wx.showLoading({
       title: '提交中...'
     })
@@ -145,12 +166,21 @@ Page({
       })
 
       wx.hideLoading()
-      wx.navigateTo({
-        url: `/pages/planning/planning?taskId=${result.taskId}`
-      })
+      if (result && result.taskId) {
+        wx.navigateTo({
+          url: `/pages/planning/planning?taskId=${result.taskId}`
+        })
+      } else {
+        wx.showToast({
+          title: '任务创建失败',
+          icon: 'none'
+        })
+      }
     } catch (err) {
       wx.hideLoading()
       console.error('Submit plan failed:', err)
+    } finally {
+      this.setData({ submitting: false })
     }
   }
 })

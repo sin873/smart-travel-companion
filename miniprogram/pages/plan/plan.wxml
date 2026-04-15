@@ -1,7 +1,7 @@
 <view class="container">
   <view class="form-header">
     <text class="header-title">填写行程需求</text>
-    <text class="header-subtitle">这一步只负责收集最小输入：目的地、日期、人数。</text>
+    <text class="header-subtitle">先收集最小必填信息，优先跑通规划任务创建与结果生成。</text>
   </view>
 
   <view class="form-section card">
@@ -50,7 +50,7 @@
 
   <view class="form-section card">
     <view class="section-label">
-      <text class="label-icon">🎯</text>
+      <text class="label-icon">🌤</text>
       <text class="label-text">出行节奏</text>
     </view>
     <view class="options-row">
@@ -90,6 +90,8 @@
   </view>
 
   <view class="submit-section">
-    <button class="submit-btn btn-primary" bindtap="submitPlan" disabled="{{!canSubmit}}">开始规划</button>
+    <button class="submit-btn btn-primary" bindtap="submitPlan" disabled="{{!canSubmit || submitting}}">
+      {{submitting ? '提交中...' : '开始规划'}}
+    </button>
   </view>
 </view>
