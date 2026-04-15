@@ -84,6 +84,8 @@ elasticsearch:
 
 
 logging:
+  file:
+    path: ./logs
   level:
     org.springframework.web: DEBUG
     org.springframework.boot.autoconfigure.web.servlet: DEBUG
@@ -134,10 +136,10 @@ travel:
     poi-url: https://restapi.amap.com/v3/place/text
     direction-url: https://restapi.amap.com/v3/direction/driving
   agent:
-    provider: legacy
+    provider: langchain4j
     rag-top-k: 4
     langchain4j:
-      enabled: false
+      enabled: true
       base-url: ${TRAVEL_AGENT_LLM_BASE_URL:${deepseek.api.url:https://api.deepseek.com/v1}}
       api-key: ${TRAVEL_AGENT_LLM_API_KEY:${deepseek.api.key:}}
       model: ${TRAVEL_AGENT_LLM_MODEL:deepseek-chat}

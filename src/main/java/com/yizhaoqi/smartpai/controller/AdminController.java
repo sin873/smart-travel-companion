@@ -1,7 +1,7 @@
 package com.yizhaoqi.smartpai.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yizhaoqi.smartpai.exception.CustomException;
 import com.yizhaoqi.smartpai.model.OrganizationTag;
@@ -511,8 +511,10 @@ public class AdminController {
      * 处理Redis中的对话数据
      */
     private void processRedisConversation(String json, List<Map<String, Object>> targetList, String username, String startDate, String endDate) throws JsonProcessingException {
-        List<Map<String, String>> history = objectMapper.readValue(json, 
-                new TypeReference<List<Map<String, String>>>() {});
+        JavaType historyType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class,
+                        objectMapper.getTypeFactory().constructMapType(Map.class, String.class, String.class));
+        List<Map<String, String>> history = objectMapper.readValue(json, historyType);
         
         // 解析时间范围
         java.time.LocalDateTime startDateTime = null;
