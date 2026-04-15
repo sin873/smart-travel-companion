@@ -2,7 +2,7 @@ package com.yizhaoqi.smartpai.service.travel;
 
 import com.yizhaoqi.smartpai.config.TravelAgentProperties;
 import com.yizhaoqi.smartpai.entity.SearchResult;
-import com.yizhaoqi.smartpai.model.travel.PoiDTO;
+import com.yizhaoqi.smartpai.model.travel.AmapPoiSearchResult;
 import com.yizhaoqi.smartpai.service.HybridSearchService;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
@@ -27,19 +27,11 @@ public class TravelPlanningTools {
 
     @Tool("Search attraction candidates in a city and return names, addresses, and coordinates.")
     public String searchCityPois(String city) {
-        List<PoiDTO> pois = amapService.searchPoi(city);
-        if (pois.isEmpty()) {
-            return "未检索到可用景点候选。";
+        AmapPoiSearchResult result = amapService.searchScenicPois(city);
+        if (result.getPois().isEmpty()) {
+            return result.getMessage();
         }
-
-        return pois.stream()
-                .limit(8)
-                .map(poi -> String.format("%s | %s | 坐标:%s,%s",
-                        safe(poi.getName()),
-                        safe(poi.getAddress()),
-                        poi.getLongitude() != null ? poi.getLongitude() : "未知",
-                        poi.getLatitude() != null ? poi.getLatitude() : "未知"))
-                .collect(Collectors.joining("\n"));
+        return amapService.summarizePoiSearch(result);
     }
 
     @Tool("Search local RAG knowledge for travel planning. Provide userId and a focused Chinese query.")
@@ -75,9 +67,5 @@ public class TravelPlanningTools {
         }
         String compacted = text.replaceAll("\\s+", " ").trim();
         return compacted.length() > 180 ? compacted.substring(0, 180) + "..." : compacted;
-    }
-
-    private String safe(String value) {
-        return value == null || value.isBlank() ? "未知" : value;
     }
 }
