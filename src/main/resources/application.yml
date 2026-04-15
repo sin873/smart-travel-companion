@@ -127,3 +127,19 @@ ai:
     temperature: 0.3
     max-tokens: 2000
     top-p: 0.9
+
+travel:
+  amap:
+    api-key: ${AMAP_API_KEY:b4a4f48b3c7e0f7401316f33997ad1c2}
+    poi-url: https://restapi.amap.com/v3/place/text
+    direction-url: https://restapi.amap.com/v3/direction/driving
+  agent:
+    provider: legacy
+    rag-top-k: 4
+    langchain4j:
+      enabled: false
+      base-url: ${TRAVEL_AGENT_LLM_BASE_URL:${deepseek.api.url:https://api.deepseek.com/v1}}
+      api-key: ${TRAVEL_AGENT_LLM_API_KEY:${deepseek.api.key:}}
+      model: ${TRAVEL_AGENT_LLM_MODEL:deepseek-chat}
+      temperature: 0.2
+      timeout-seconds: 60

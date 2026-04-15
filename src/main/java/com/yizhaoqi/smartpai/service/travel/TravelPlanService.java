@@ -1,6 +1,7 @@
 package com.yizhaoqi.smartpai.service.travel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yizhaoqi.smartpai.config.TravelAgentProperties;
 import com.yizhaoqi.smartpai.entity.travel.TravelPlanTask;
 import com.yizhaoqi.smartpai.model.travel.*;
 import com.yizhaoqi.smartpai.repository.travel.TravelPlanTaskRepository;
@@ -26,6 +27,12 @@ public class TravelPlanService {
 
     @Autowired
     private TravelAgentService travelAgentService;
+
+    @Autowired
+    private LangChain4jTravelAgentService langChain4jTravelAgentService;
+
+    @Autowired
+    private TravelAgentProperties travelAgentProperties;
 
     /**
      * 创建行程规划任务并执行生成（第四步 Mock 实现）
@@ -76,7 +83,11 @@ public class TravelPlanService {
 
         // 4. 调用 TravelAgentService 执行同步生成（Mock 版本）
         // 当前为同步实现，后续可改为异步
-        travelAgentService.executePlan(taskId, request, userId);
+        if ("langchain4j".equalsIgnoreCase(travelAgentProperties.getProvider())) {
+            langChain4jTravelAgentService.executePlan(taskId, request, userId);
+        } else {
+            travelAgentService.executePlan(taskId, request, userId);
+        }
 
         // 5. 返回响应
         PlanItineraryResponse response = new PlanItineraryResponse();
