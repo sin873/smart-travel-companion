@@ -37,7 +37,11 @@
       <text class="section-action" bindtap="goToPlan">+ 新建行程</text>
     </view>
 
-    <view class="itinerary-list" wx:if="{{itineraries.length > 0}}">
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">正在加载行程...</text>
+    </view>
+
+    <view class="itinerary-list" wx:elif="{{itineraries.length > 0}}">
       <view class="itinerary-item card" wx:for="{{itineraries}}" wx:key="itineraryId" bindtap="viewItinerary" data-id="{{item.itineraryId}}">
         <view class="item-header">
           <text class="item-title">{{item.title}}</text>
@@ -50,13 +54,14 @@
           <text class="info-item">🗓️ {{item.dateRangeText}}</text>
           <text class="info-item">👥 {{item.travelerCount}}人</text>
         </view>
+        <text class="item-summary" wx:if="{{item.summaryText}}">{{item.summaryText}}</text>
       </view>
     </view>
 
     <view class="empty-state" wx:else>
-      <text class="empty-icon">📋</text>
+      <text class="empty-icon">🧳</text>
       <text class="empty-text">还没有已保存的行程</text>
-      <text class="empty-desc">先去填写需求，生成你的第一个方案。</text>
+      <text class="empty-desc">先去填写需求，生成你的第一份方案。</text>
       <button class="empty-btn btn-primary" bindtap="goToPlan">开始规划</button>
     </view>
   </view>

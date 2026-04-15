@@ -49,6 +49,48 @@
   margin-bottom: 120rpx;
 }
 
+.summary-card {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #323233;
+  margin-bottom: 16rpx;
+}
+
+.summary-text {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #646566;
+  white-space: pre-wrap;
+}
+
+.hint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.hint-item {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #646566;
+  padding-left: 24rpx;
+  position: relative;
+}
+
+.hint-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #1989fa;
+}
+
 .day-card {
   background: white;
   border-radius: 20rpx;
@@ -163,6 +205,12 @@
   margin-bottom: 8rpx;
 }
 
+.attr-address {
+  font-size: 24rpx;
+  color: #646566;
+  margin-bottom: 8rpx;
+}
+
 .attr-notes {
   font-size: 24rpx;
   color: #646566;
@@ -177,6 +225,12 @@
   padding: 20rpx;
   background: #fffbe8;
   border-radius: 12rpx;
+}
+
+.empty-day {
+  font-size: 26rpx;
+  color: #969799;
+  text-align: center;
 }
 
 .notes-label {
