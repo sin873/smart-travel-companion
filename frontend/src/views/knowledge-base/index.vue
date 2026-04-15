@@ -7,6 +7,7 @@ import { UploadStatus } from '@/enum';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import FilePreview from '@/components/custom/file-preview.vue';
 import UploadDialog from './modules/upload-dialog.vue';
+import BatchUploadDialog from './modules/batch-upload-dialog.vue';
 import SearchDialog from './modules/search-dialog.vue';
 
 const appStore = useAppStore();
@@ -249,6 +250,11 @@ const uploadVisible = ref(false);
 function handleUpload() {
   uploadVisible.value = true;
 }
+
+const batchUploadVisible = ref(false);
+function handleBatchUpload() {
+  batchUploadVisible.value = true;
+}
 // #endregion
 
 // #region 检索知识库
@@ -337,6 +343,12 @@ async function onBeforeUpload(
               </template>
               检索知识库
             </NButton>
+            <NButton size="small" ghost type="primary" @click="handleBatchUpload">
+              <template #icon>
+                <icon-mdi-folder-upload-outline class="text-icon" />
+              </template>
+              批量上传
+            </NButton>
           </template>
         </TableHeaderOperation>
       </template>
@@ -355,6 +367,7 @@ async function onBeforeUpload(
       />
     </NCard>
     <UploadDialog v-model:visible="uploadVisible" />
+    <BatchUploadDialog v-model:visible="batchUploadVisible" />
     <SearchDialog v-model:visible="searchVisible" />
     
     <!-- 文件预览弹窗 -->
