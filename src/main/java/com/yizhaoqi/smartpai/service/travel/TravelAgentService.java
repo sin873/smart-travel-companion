@@ -12,6 +12,7 @@ import com.yizhaoqi.smartpai.model.travel.PoiCandidate;
 import com.yizhaoqi.smartpai.model.travel.PoiDTO;
 import com.yizhaoqi.smartpai.model.travel.UserIntent;
 import com.yizhaoqi.smartpai.repository.travel.TravelPlanTaskRepository;
+import com.yizhaoqi.smartpai.service.travel.rag.TravelKnowledgeRagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,9 @@ public class TravelAgentService {
     @Autowired
     private AmapService amapService;
 
+    @Autowired
+    private TravelKnowledgeRagService travelKnowledgeRagService;
+
     @Transactional
     public void executePlan(String taskId, PlanItineraryRequest request, String userId) {
         logger.info("Starting plan execution - taskId: {}, destination: {}, userId: {}", taskId, request.getDestination(), userId);
@@ -77,7 +81,7 @@ public class TravelAgentService {
             UserIntent intent = perceive(request);
 
             updateTaskStatus(task, "PROCESSING", 50, "正在组织候选景点...");
-            PlanningContext context = plan(intent);
+            PlanningContext context = plan(intent, userId);
 
             updateTaskStatus(task, "PROCESSING", 80, "正在生成行程草案...");
             ItineraryDraft draft = decide(intent, context);
@@ -120,12 +124,16 @@ public class TravelAgentService {
      * Gather candidate POIs and external knowledge.
      */
     public PlanningContext plan(UserIntent intent) {
+        return plan(intent, null);
+    }
+
+    public PlanningContext plan(UserIntent intent, String userId) {
         PlanningContext context = new PlanningContext();
         context.setDestination(intent.getDestination());
         context.setUserIntent(intent);
 
         List<PoiCandidate> poiCandidates = retrievePoiCandidates(intent);
-        List<String> retrievedKnowledge = retrieveKnowledge(intent);
+        List<String> retrievedKnowledge = retrieveKnowledge(intent, userId);
 
         context.setPoiCandidates(poiCandidates);
         context.setRetrievedKnowledge(retrievedKnowledge);
@@ -210,11 +218,9 @@ public class TravelAgentService {
         return candidates;
     }
 
-    private List<String> retrieveKnowledge(UserIntent intent) {
-        // Reserved for future RAG integration in planning phase.
-        // Current implementation keeps the structure explicit for defense/demo.
-        logger.debug("【Planning】知识检索预留入口 destination={}", intent.getDestination());
-        return new ArrayList<>();
+    private List<String> retrieveKnowledge(UserIntent intent, String userId) {
+        logger.debug("【Planning】开始旅行知识检索 destination={}, userId={}", intent.getDestination(), userId);
+        return travelKnowledgeRagService.retrievePlanningKnowledge(intent, userId);
     }
 
     private String buildConstraintSummary(UserIntent intent) {
