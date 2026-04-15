@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yizhaoqi.smartpai.model.travel.AmapPoiSearchResult;
 import com.yizhaoqi.smartpai.model.travel.AmapRoutePlanResult;
 import com.yizhaoqi.smartpai.model.travel.PoiDTO;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,9 +18,13 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class AmapService {
@@ -32,17 +40,36 @@ public class AmapService {
     private final String apiKey;
     private final String poiUrl;
     private final String directionUrl;
+    private final OkHttpClient httpClient;
 
+    @Autowired
     public AmapService(RestTemplate restTemplate,
                        ObjectMapper objectMapper,
                        @Value("${travel.amap.api-key:b4a4f48b3c7e0f7401316f33997ad1c2}") String apiKey,
                        @Value("${travel.amap.poi-url:https://restapi.amap.com/v3/place/text}") String poiUrl,
-                       @Value("${travel.amap.direction-url:https://restapi.amap.com/v3/direction/driving}") String directionUrl) {
+                       @Value("${travel.amap.direction-url:https://restapi.amap.com/v3/direction/driving}") String directionUrl,
+                       @Value("${travel.amap.connect-timeout-seconds:10}") int connectTimeoutSeconds,
+                       @Value("${travel.amap.read-timeout-seconds:20}") int readTimeoutSeconds,
+                       @Value("${travel.amap.call-timeout-seconds:30}") int callTimeoutSeconds) {
+        this(restTemplate, objectMapper, apiKey, poiUrl, directionUrl, new OkHttpClient.Builder()
+                .connectTimeout(Duration.ofSeconds(Math.max(1, connectTimeoutSeconds)))
+                .readTimeout(Duration.ofSeconds(Math.max(1, readTimeoutSeconds)))
+                .callTimeout(Duration.ofSeconds(Math.max(1, callTimeoutSeconds)))
+                .build());
+    }
+
+    AmapService(RestTemplate restTemplate,
+                ObjectMapper objectMapper,
+                String apiKey,
+                String poiUrl,
+                String directionUrl,
+                OkHttpClient httpClient) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.apiKey = apiKey;
         this.poiUrl = poiUrl;
         this.directionUrl = directionUrl;
+        this.httpClient = httpClient;
     }
 
     public List<PoiDTO> searchPoi(String city) {
@@ -71,7 +98,7 @@ public class AmapService {
 
         try {
             String url = buildPoiUrl(city, keyword, types, limit);
-            String response = restTemplate.getForObject(url, String.class);
+            String response = get(url);
             JsonNode root = readRoot(response);
             if (!isAmapSuccess(root)) {
                 result.setSuccess(false);
@@ -90,9 +117,10 @@ public class AmapService {
                 }
             }
 
+            List<PoiDTO> normalizedPois = normalizePois(pois, limit);
             result.setSuccess(true);
-            result.setPois(pois);
-            result.setMessage(pois.isEmpty() ? "未检索到匹配的 POI" : "ok");
+            result.setPois(normalizedPois);
+            result.setMessage(normalizedPois.isEmpty() ? "未检索到匹配的 POI" : "ok");
             return result;
         } catch (Exception e) {
             logger.warn("Failed to search POI from Amap, city={}, keyword={}", city, keyword, e);
@@ -138,7 +166,7 @@ public class AmapService {
 
         try {
             String url = buildDrivingUrl(origin, destination);
-            String response = restTemplate.getForObject(url, String.class);
+            String response = get(url);
             JsonNode root = readRoot(response);
             if (!isAmapSuccess(root)) {
                 result.setSuccess(false);
@@ -231,6 +259,21 @@ public class AmapService {
                 + "&destination=" + encode(destination.getLongitude() + "," + destination.getLatitude());
     }
 
+    private String get(String url) throws Exception {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Accept", "application/json")
+                .header("User-Agent", "Mozilla/5.0")
+                .build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IllegalStateException("HTTP " + response.code());
+            }
+            return response.body() != null ? response.body().string() : "";
+        }
+    }
+
     private JsonNode readRoot(String response) throws Exception {
         if (response == null || response.isBlank()) {
             return objectMapper.createObjectNode();
@@ -279,6 +322,31 @@ public class AmapService {
         return String.join(";", segments);
     }
 
+    private List<PoiDTO> normalizePois(List<PoiDTO> pois, int limit) {
+        if (pois == null || pois.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, PoiDTO> deduplicated = new LinkedHashMap<>();
+        for (PoiDTO poi : pois) {
+            if (poi == null || isBlank(poi.getName())) {
+                continue;
+            }
+            String key = !isBlank(poi.getPoiId())
+                    ? poi.getPoiId()
+                    : poi.getName() + "|" + safe(poi.getAddress());
+            deduplicated.putIfAbsent(key, poi);
+        }
+
+        return deduplicated.values().stream()
+                .sorted(Comparator
+                        .comparingInt(this::poiScore)
+                        .reversed()
+                        .thenComparing(PoiDTO::getName, String.CASE_INSENSITIVE_ORDER))
+                .limit(Math.max(1, limit))
+                .toList();
+    }
+
     private PoiDTO parsePoi(JsonNode poiNode) {
         try {
             String name = poiNode.path("name").asText("");
@@ -309,6 +377,29 @@ public class AmapService {
             logger.warn("Failed to parse Amap POI node", e);
             return null;
         }
+    }
+
+    private int poiScore(PoiDTO poi) {
+        int score = 0;
+        String type = safe(poi.getType()).toLowerCase(Locale.ROOT);
+        String name = safe(poi.getName()).toLowerCase(Locale.ROOT);
+
+        if (type.contains("国家级景点") || type.contains("风景名胜")) {
+            score += 40;
+        }
+        if (type.contains("旅游景点") || type.contains("纪念馆")) {
+            score += 20;
+        }
+        if (type.contains("公园")) {
+            score += 10;
+        }
+        if (name.contains("西湖") || name.contains("景区") || name.contains("景点")) {
+            score += 10;
+        }
+        if (hasCoordinate(poi)) {
+            score += 5;
+        }
+        return score;
     }
 
     private boolean hasCoordinate(PoiDTO poi) {
