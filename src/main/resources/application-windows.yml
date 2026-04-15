@@ -129,6 +129,8 @@ elasticsearch:
 
 # 日志配置
 logging:
+  file:
+    path: ./logs
   level:
     root: INFO
     com.yizhaoqi.smartpai: DEBUG

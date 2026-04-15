@@ -13,6 +13,12 @@ public class TravelAgentProperties {
     private Integer ragTopK = 4;
     private Langchain4j langchain4j = new Langchain4j();
 
+    public boolean useLangChain4j() {
+        return "langchain4j".equalsIgnoreCase(provider)
+                && langchain4j != null
+                && Boolean.TRUE.equals(langchain4j.getEnabled());
+    }
+
     @Data
     public static class Langchain4j {
         private Boolean enabled = Boolean.FALSE;

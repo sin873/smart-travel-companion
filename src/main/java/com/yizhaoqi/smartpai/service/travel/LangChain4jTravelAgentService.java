@@ -43,6 +43,12 @@ public class LangChain4jTravelAgentService {
 
     @Transactional
     public void executePlan(String taskId, PlanItineraryRequest request, String userId) {
+        if (!travelAgentProperties.useLangChain4j()) {
+            logger.info("LangChain4j provider disabled, fallback to legacy travel agent, taskId={}", taskId);
+            legacyTravelAgentService.executePlan(taskId, request, userId);
+            return;
+        }
+
         logger.info("Starting LangChain4j travel agent flow, taskId={}, destination={}, userId={}",
                 taskId, request.getDestination(), userId);
 
@@ -68,21 +74,18 @@ public class LangChain4jTravelAgentService {
             logger.info("LangChain4j travel plan completed, taskId={}, itineraryId={}",
                     taskId, result.getItineraryId());
         } catch (Exception e) {
-            logger.error("LangChain4j travel plan failed, taskId={}", taskId, e);
-            task.setStatus("FAILED");
-            task.setProgress(0);
-            task.setErrorMessage("规划失败:" + e.getMessage());
-            travelPlanTaskRepository.save(task);
+            logger.warn("LangChain4j travel agent failed, fallback to legacy flow, taskId={}", taskId, e);
+            legacyTravelAgentService.executePlan(taskId, request, userId);
         }
     }
 
     private String generateAgentAdvice(PlanItineraryRequest request, UserIntent intent, String userId) {
         TravelAgentProperties.Langchain4j config = travelAgentProperties.getLangchain4j();
-        if (config == null || !Boolean.TRUE.equals(config.getEnabled())) {
-            return "LangChain4j Agent 未启用，当前行程使用基础规划结果。";
+        if (config == null) {
+            throw new IllegalStateException("LangChain4j config is missing");
         }
         if (config.getApiKey() == null || config.getApiKey().isBlank()) {
-            return "LangChain4j Agent 缺少 API Key，当前行程使用基础规划结果。";
+            throw new IllegalStateException("LangChain4j agent apiKey is blank");
         }
 
         OpenAiChatModel chatModel = OpenAiChatModel.builder()
@@ -98,40 +101,42 @@ public class LangChain4jTravelAgentService {
                 .tools(travelPlanningTools)
                 .build();
 
-        String prompt = buildAgentPrompt(request, intent, userId);
-        return assistant.plan(prompt);
+        return assistant.plan(buildAgentPrompt(request, intent, userId));
     }
 
     private String buildAgentPrompt(PlanItineraryRequest request, UserIntent intent, String userId) {
         String interests = request.getPreferences() != null && request.getPreferences().getInterests() != null
-                ? String.join("、", request.getPreferences().getInterests())
-                : "无特别偏好";
+                ? String.join(", ", request.getPreferences().getInterests())
+                : "none";
         String pace = request.getPreferences() != null && request.getPreferences().getPace() != null
                 ? request.getPreferences().getPace()
-                : "适中";
+                : "normal";
         String meals = request.getPreferences() != null && Boolean.TRUE.equals(request.getPreferences().getIncludeMeals())
-                ? "需要餐饮建议"
-                : "餐饮建议可选";
+                ? "need meal suggestions"
+                : "meal suggestions optional";
         String avoidCrowds = request.getPreferences() != null && Boolean.TRUE.equals(request.getPreferences().getAvoidCrowds())
-                ? "尽量避开拥挤时段"
-                : "无需特别避开拥挤";
+                ? "prefer to avoid peak crowd hours"
+                : "no crowd avoidance requirement";
 
         return """
-                请为以下旅行需求生成规划建议，并主动使用工具完成景点检索、路线判断和本地知识库检索。
-                当前 userId: %s
-                目的地: %s
-                出行日期: %s 至 %s，共 %s 天
-                出行人数: %s
-                预算: %s
-                节奏偏好: %s
-                兴趣偏好: %s
-                其他要求: %s，%s
+                You are the travel planning agent of Smart Travel Companion.
+                Use tools first before answering. Prefer concrete POIs, route hints, and local knowledge.
 
-                要求:
-                - 至少调用一次景点工具
-                - 至少调用一次路线工具
-                - 如有可能，调用一次知识库工具补充本地资料
-                - 输出要能直接附加到结构化行程中，避免空泛
+                userId: %s
+                destination: %s
+                travel dates: %s to %s, %s day(s)
+                traveler count: %s
+                budget: %s
+                pace: %s
+                interests: %s
+                extra preferences: %s, %s
+
+                Requirements:
+                - Call the POI tool at least once.
+                - Call the route tool at least once.
+                - If useful, call the local knowledge search tool once.
+                - Respond in concise Simplified Chinese.
+                - Structure the answer with recommended places, route advice, and notes.
                 """.formatted(
                 userId,
                 request.getDestination(),
@@ -139,7 +144,7 @@ public class LangChain4jTravelAgentService {
                 request.getEndDate(),
                 intent.getDays(),
                 Objects.toString(request.getTravelerCount(), "2"),
-                Objects.toString(request.getBudget(), "未填写"),
+                Objects.toString(request.getBudget(), "unspecified"),
                 pace,
                 interests,
                 meals,
@@ -156,7 +161,7 @@ public class LangChain4jTravelAgentService {
             if (summary.length() > 0) {
                 summary.append("\n\n");
             }
-            summary.append("智能伴旅Agent建议:\n").append(agentAdvice.trim());
+            summary.append("智能伴旅 Agent 建议:\n").append(agentAdvice.trim());
         }
         draft.setSummary(summary.toString());
 

@@ -83,7 +83,7 @@ public class TravelPlanService {
 
         // 4. 调用 TravelAgentService 执行同步生成（Mock 版本）
         // 当前为同步实现，后续可改为异步
-        if ("langchain4j".equalsIgnoreCase(travelAgentProperties.getProvider())) {
+        if (travelAgentProperties.useLangChain4j()) {
             langChain4jTravelAgentService.executePlan(taskId, request, userId);
         } else {
             travelAgentService.executePlan(taskId, request, userId);
