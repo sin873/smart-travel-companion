@@ -58,7 +58,7 @@ public class LangChain4jTravelAgentService {
             String agentAdvice = generateAgentAdvice(request, intent, userId);
             updateTaskStatus(task, "PROCESSING", 55);
 
-            PlanningContext context = legacyTravelAgentService.plan(intent);
+            PlanningContext context = legacyTravelAgentService.plan(intent, userId);
             ItineraryDraft draft = legacyTravelAgentService.decide(intent, context);
             enrichDraft(draft, request.getDestination(), agentAdvice);
             updateTaskStatus(task, "PROCESSING", 85);
